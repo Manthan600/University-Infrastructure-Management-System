@@ -1,0 +1,30 @@
+.logo{
+    cursor: pointer;
+}
+.navbar-brand{
+    color: white !important;
+    text-decoration: none !important;
+    font-weight: 500;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.navbar{
+    background-color: #5521bc;
+    height: 60px;
+    
+}
+
+.link{
+    text-decoration: none !important;
+    color: white;
+    text-transform: uppercase;
+    margin: 0 10px ;
+}
+
+.link:hover{
+    color: black;
+    text-transform: uppercase;
+    /* font-size: 1.3rem; */
+    margin: 0 10px ;
+    font-weight: 500;
+}
