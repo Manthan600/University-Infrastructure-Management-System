@@ -1,0 +1,39 @@
+.options-container {
+  display: flex;
+  justify-content: center;
+  /* Center horizontally */
+  margin-bottom: 20px;
+  /* Add margin to the bottom */
+}
+
+.options {
+  display: flex;
+  justify-content: center;
+}
+
+.option-button {
+  display: none;
+}
+
+.option-button+label {
+  background-color: transparent;
+  color: #000;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.option-button:checked+label {
+  background-color: #007bff;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.option-button+label:not(:first-of-type) {
+  margin-left: 10px;
+}
+
+.option-button:checked+label:first-of-type {
+  margin-right: 10px;
+}
