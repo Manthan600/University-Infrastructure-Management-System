@@ -9,6 +9,7 @@ import Faculty from './Pages/Faculty'
 import Account from './Pages/Account'
 import Technician from './Pages/Technician'
 import Error404 from './Pages/Error404';
+import Login from './Pages/Login';
 
 
 
@@ -33,6 +34,10 @@ const allRoutes=createBrowserRouter([
   {
     path : '/faculty',
     element : <Faculty/>
+  },
+  {
+    path : '/login',
+    element : <Login/>
   },
   {
     path : '*',
