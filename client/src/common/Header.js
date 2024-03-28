@@ -22,6 +22,7 @@ export default function Header() {
                         <Nav.Link  ><Link className='link' to={'/faculty'}>Faculty</Link></Nav.Link>
                         <Nav.Link ><Link className='link' to={'/tech'}>Tech</Link></Nav.Link>
                         <Nav.Link ><Link className='link' to={'/acc'}>Account</Link></Nav.Link>
+                        <Nav.Link ><Link className='link' to={'/about'}>AboutUs</Link></Nav.Link>
                     </Nav>
 
               

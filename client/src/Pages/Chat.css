@@ -1,0 +1,124 @@
+/* Chat.css */
+
+/* Container for the entire chat box */
+.chat-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 80vh;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+
+.box {
+    /* width: 1000px; */
+    width: 70vw;
+    margin: auto;
+    /* background-color: rgb(255, 166, 0 ); */
+    /* background-color: rgba(64, 192, 192 , 0.5); */
+    background-color: rgb(255, 255, 255, 0.85);
+
+    /* background-color: rgb(255, 255, 255 , 0.9); */
+    min-height: 70vh;
+    border-radius: 9px;
+    margin-top: 20px;
+    height: auto;
+    box-shadow: 0 0 10px grey;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+
+.Name h4 {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+}
+
+/* Styling for the chat content area */
+.chat-content {
+    padding: 10px;
+    overflow-y: auto;
+    
+    height: 60vh;
+    /* Adjust height as needed */
+}
+
+/* Styling for individual chat messages */
+.message {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+/* Styling for the message text */
+.message-text {
+    margin: 0;
+}
+
+/* Styling for the chat input area */
+.chat-input {
+    
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ccc;
+    display: flex;
+}
+
+/* Styling for the input field */
+.chat-input input {
+    width: calc(100% - 70px);
+    /* Adjust width as needed */
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+/* Styling for the send button */
+.chat-input button {
+    padding: 8px 15px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Styling for individual chat messages */
+.message {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px; /* Add some bottom margin between messages */
+    border-radius: 10px; /* Rounded corners for message boxes */
+    max-width: 70%; /* Limit the width of message boxes */
+}
+
+/* Styling for the message text */
+.message-text {
+    margin: 0;
+}
+
+/* Styling for messages sent by the user */
+.sent-by-me {
+    background-color: #007bff; /* Your chosen color for sent messages */
+    color: #fff; /* Text color for sent messages */
+    margin-left: auto; /* Align messages to the right side */
+  }
+  
+  /* Styling for individual chat messages */
+  .message {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+  }
+  
+  /* Styling for the message text */
+  .message-text {
+    margin: 0;
+  }
+      

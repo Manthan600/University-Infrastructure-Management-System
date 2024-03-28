@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import Header from '../common/Header';
 import './Faculty.css';
 
@@ -163,9 +165,10 @@ export default function Faculty() {
                       <td>Tech1</td>
                       <td class="text-center">
                         {/* <form method="POST" action=""> */}
-                        <form action="">
-                          <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Chat</button>
-                        </form>
+                        {/* <form action="">
+                          <Link to="/chat" onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Chat</Link>
+                        </form> */}
+                        <Link to="/chat"  className="btn btn-primary">Chat</Link>
                       </td>
 
                     </tr>
@@ -201,9 +204,10 @@ export default function Faculty() {
                       <td>Tech1</td>
                       <td class="text-center">
                         {/* <form method="POST" action=""> */}
-                        <form action="">
+                        {/* <form action="">
                           <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Chat</button>
-                        </form>
+                        </form> */}
+                        <Link to="/chat"  className="btn btn-primary">Chat</Link>
                       </td>
 
                     </tr>

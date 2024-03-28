@@ -7,9 +7,10 @@ import {createBrowserRouter,RouterProvider} from 'react-router-dom'
 import Student from './Pages/Student'
 import Faculty from './Pages/Faculty'
 import Account from './Pages/Account'
+import Chat from './Pages/Chat'
+import AboutUs from './Pages/AboutUs'
 import Technician from './Pages/Technician'
 import Error404 from './Pages/Error404';
-
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -33,6 +34,14 @@ const allRoutes=createBrowserRouter([
   {
     path : '/faculty',
     element : <Faculty/>
+  },
+  {
+    path: "/chat",
+     element:<Chat/> 
+  },
+  {
+    path: "/about",
+     element:<AboutUs/> 
   },
   {
     path : '*',
