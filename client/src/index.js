@@ -12,6 +12,7 @@ import AboutUs from './Pages/AboutUs'
 import Technician from './Pages/Technician'
 import Error404 from './Pages/Error404';
 import Login from './Pages/Login';
+
 import AddDevices from './Pages/Faculty_AddElements/AddDevices';
 import AddStaff from './Pages/Faculty_AddElements/AddStaff';
 import Pay from './Pages/Pay';
