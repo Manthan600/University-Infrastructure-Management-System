@@ -17,7 +17,10 @@ export default function AboutUs() {
         <div className="right">
             <h3>About our project &gt;&gt; </h3>
             <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Culpa, dolores. Odio possimus officia, itaque illo quae praesentium quo deleniti aliquid ratione dicta eligendi amet obcaecati perferendis est tempore assumenda voluptatibus incidunt doloremque beatae consequatur ex consequuntur nobis adipisci. Blanditiis voluptatem officiis, ullam quaerat beatae nesciunt tempora at nisi temporibus sit.</p>
-
+            <div className="git">
+              <h3><a href="https://github.com/Manthan600/University-Infrastructure-Management-System.git" target="_blank" rel="noopener noreferrer">~ GitHub</a></h3>
+            </div>
+            
         </div>
       </div>
 
@@ -62,9 +65,9 @@ export default function AboutUs() {
 
       <footer className="footer">
       <div className="container">
-        <p>&copy; {new Date().getFullYear()} SE2</p>
+        <p>&copy; {new Date().getFullYear()} SE2-PROJECT</p>
       </div>
-    </footer>
+    </footer> 
     </div>
   );
 }

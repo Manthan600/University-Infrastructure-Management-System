@@ -11,6 +11,12 @@ import Chat from './Pages/Chat'
 import AboutUs from './Pages/AboutUs'
 import Technician from './Pages/Technician'
 import Error404 from './Pages/Error404';
+import Login from './Pages/Login';
+import AddDevices from './Pages/Faculty_AddElements/AddDevices';
+import AddStaff from './Pages/Faculty_AddElements/AddStaff';
+import Pay from './Pages/Pay';
+import UpdateDevies from './Pages/Faculty_AddElements/UpdateDevices';
+import UpdateStaff from './Pages/Faculty_AddElements/UpdateStaff';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -32,8 +38,28 @@ const allRoutes=createBrowserRouter([
     element : <Account/>
   },
   {
+    path : '/acc/pay',
+    element : <Pay/>
+  },
+  {
     path : '/faculty',
     element : <Faculty/>
+  },
+  {
+    path : '/adddevices',
+    element : <AddDevices/>
+  },
+  {
+    path : '/addstaff',
+    element : <AddStaff/>
+  },
+  {
+    path : '/updatedevices',
+    element : <UpdateDevies/>
+  },
+  {
+    path : '/updatestaff',
+    element : <UpdateStaff/>
   },
   {
     path: "/chat",
@@ -42,6 +68,10 @@ const allRoutes=createBrowserRouter([
   {
     path: "/about",
      element:<AboutUs/> 
+  },
+  {
+    path : '/login',
+    element : <Login/>
   },
   {
     path : '*',
