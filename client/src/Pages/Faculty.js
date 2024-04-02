@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import Header from '../common/Header';
 import './Faculty.css';
+
 
 export default function Faculty() {
   const [selectedOption, setSelectedOption] = useState('complaint'); // Initial selected option
@@ -66,7 +69,7 @@ export default function Faculty() {
           <div className="box">
             <div className="head">
               <h2>Complaint</h2>
-              <h4>Fac-ID</h4>
+              <h3 >Fac-ID</h3>
             </div>
 
             <div className="complaint">
@@ -163,9 +166,10 @@ export default function Faculty() {
                       <td>Tech1</td>
                       <td class="text-center">
                         {/* <form method="POST" action=""> */}
-                        <form action="">
-                          <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Chat</button>
-                        </form>
+                        {/* <form action="">
+                          <Link to="/chat" onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Chat</Link>
+                        </form> */}
+                        <Link to="/chat"  className="btn btn-primary">Chat</Link>
                       </td>
 
                     </tr>
@@ -201,9 +205,10 @@ export default function Faculty() {
                       <td>Tech1</td>
                       <td class="text-center">
                         {/* <form method="POST" action=""> */}
-                        <form action="">
+                        {/* <form action="">
                           <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Chat</button>
-                        </form>
+                        </form> */}
+                        <Link to="/chat"  className="btn btn-primary">Chat</Link>
                       </td>
 
                     </tr>
@@ -233,7 +238,7 @@ export default function Faculty() {
               <form action="">
 
                 <label htmlFor="">Computers :</label>
-                <button style={{ marginLeft: '30px' }} onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Add</button>
+                <Link to="/adddevices" style={{ marginLeft: '30px' }}   className="btn btn-primary">Add</Link>
 
                 <table class="table table-bordered mb-5" >
                   <thead >
@@ -259,8 +264,8 @@ export default function Faculty() {
                       <td class="text-center">
                         {/* <form method="POST" action=""> */}
                         <form action="">
-                          <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary" style={{ marginRight: '10px' }}>Update</button>
-                          <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
+                        <Link to="/updatedevices" style={{ marginRight: '10px' }}   className="btn btn-primary">Update</Link>
+                        <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
                         </form>
                       </td>
 
@@ -271,7 +276,7 @@ export default function Faculty() {
                 <br />
 
                 <label htmlFor="">Projectors :</label>
-                <button style={{ marginLeft: '30px' }} onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Add</button>
+                <Link to="/adddevices" style={{ marginLeft: '30px' }}   className="btn btn-primary">Add</Link>
 
                 <table class="table table-bordered mb-5" >
                   <thead >
@@ -297,8 +302,8 @@ export default function Faculty() {
                       <td class="text-center">
                         {/* <form method="POST" action=""> */}
                         <form action="">
-                          <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary" style={{ marginRight: '10px' }}>Update</button>
-                          <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
+                        <Link to="/updatedevices" style={{ marginRight: '10px' }}   className="btn btn-primary">Update</Link>
+                        <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
                         </form>
                       </td>
 
@@ -309,7 +314,7 @@ export default function Faculty() {
                 <br />
 
                 <label htmlFor="device">AC :</label>
-                <button style={{ marginLeft: '30px' }} onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Add</button>
+                <Link to="/adddevices" style={{ marginLeft: '30px' }}   className="btn btn-primary">Add</Link>
 
                 <table class="table table-bordered mb-5" >
                   <thead >
@@ -335,8 +340,8 @@ export default function Faculty() {
                       <td class="text-center">
                         {/* <form method="POST" action=""> */}
                         <form action="">
-                          <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary" style={{ marginRight: '10px' }}>Update</button>
-                          <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
+                        <Link to="/updatedevices" style={{ marginRight: '10px' }}   className="btn btn-primary">Update</Link>
+                        <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
                         </form>
                       </td>
 
@@ -346,7 +351,7 @@ export default function Faculty() {
 
 
                 <label htmlFor="">Other : </label>
-                <button style={{ marginLeft: '30px' }} onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Add</button>
+                <Link to="/adddevices" style={{ marginLeft: '30px' }}   className="btn btn-primary">Add</Link>
 
                 <table class="table table-bordered mb-5" >
                   <thead >
@@ -372,8 +377,8 @@ export default function Faculty() {
                       <td class="text-center">
                         {/* <form method="POST" action=""> */}
                         <form action="">
-                          <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary" style={{ marginRight: '10px' }}>Update</button>
-                          <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
+                        <Link to="/updatedevices" style={{ marginRight: '10px' }}   className="btn btn-primary">Update</Link>
+                        <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
                         </form>
                       </td>
 
@@ -404,7 +409,7 @@ export default function Faculty() {
             <form action="">
 
               <label htmlFor="">Students :</label>
-              <button style={{ marginLeft: '30px' }} onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Add</button>
+              <Link to="/addstaff" style={{ marginLeft: '30px' }}   className="btn btn-primary">Add</Link>
 
               <table class="table table-bordered mb-5" >
                 <thead >
@@ -428,7 +433,7 @@ export default function Faculty() {
                     <td class="text-center">
                       {/* <form method="POST" action=""> */}
                       <form action="">
-                        <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary" style={{ marginRight: '10px' }}>Update</button>
+                        <Link to="/updatestaff" style={{ marginRight: '10px' }}   className="btn btn-primary">Update</Link>
                         <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
                       </form>
                     </td>
@@ -440,7 +445,7 @@ export default function Faculty() {
               <br />
 
               <label htmlFor="">Technicians :</label>
-              <button style={{ marginLeft: '30px' }} onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Add</button>
+              <Link to="/addstaff" style={{ marginLeft: '30px' }}   className="btn btn-primary">Add</Link>
 
               <table class="table table-bordered mb-5" >
                 <thead >
@@ -470,7 +475,7 @@ export default function Faculty() {
                     <td class="text-center">
                       {/* <form method="POST" action=""> */}
                       <form action="">
-                        <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary" style={{ marginRight: '10px' }}>Update</button>
+                      <Link to="/updatestaff" style={{ marginRight: '10px' }}   className="btn btn-primary">Update</Link>
                         <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
                       </form>
                     </td>
@@ -482,7 +487,7 @@ export default function Faculty() {
               <br />
 
               <label htmlFor="">Faculty/Admin :</label>
-              <button style={{ marginLeft: '30px' }} onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Add</button>
+              <Link to="/addstaff" style={{ marginLeft: '30px' }}   className="btn btn-primary">Add</Link>
 
               <table class="table table-bordered mb-5" >
                 <thead >
@@ -502,7 +507,7 @@ export default function Faculty() {
                     <td class="text-center">
                       {/* <form method="POST" action=""> */}
                       <form action="">
-                        <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary" style={{ marginRight: '10px' }}>Update</button>
+                      <Link to="/updatestaff" style={{ marginRight: '10px' }}   className="btn btn-primary">Update</Link>
                         <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
                       </form>
                     </td>
@@ -516,7 +521,7 @@ export default function Faculty() {
 
 
               <label htmlFor="">Account Section : (data fields??)</label>
-              <button style={{ marginLeft: '30px' }} onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Add</button>
+              <Link to="/addstaff" style={{ marginLeft: '30px' }}   className="btn btn-primary">Add</Link>
 
               <table class="table table-bordered mb-5" >
                 <thead >
@@ -538,7 +543,7 @@ export default function Faculty() {
                     <td class="text-center">
                       {/* <form method="POST" action=""> */}
                       <form action="">
-                        <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary" style={{ marginRight: '10px' }}>Update</button>
+                      <Link to="/updatestaff" style={{ marginRight: '10px' }}   className="btn btn-primary">Update</Link>
                         <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-danger">Delete</button>
                       </form>
                     </td>
