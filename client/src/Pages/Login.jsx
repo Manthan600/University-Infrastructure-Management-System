@@ -162,7 +162,7 @@ const TechnicianLogin = () => {
             />
           </div>
           <div className="flex items-center justify-between">
-            <button
+            <button 
               type="button"
               onClick={handleLogin}
               className="bg-blue-800 text-white px-6 py-2 rounded-md hover:bg-green-900 transition-all duration-300"
