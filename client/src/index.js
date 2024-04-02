@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter
 import './index.css'; 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -23,20 +24,20 @@ import UpdateStaff from './Pages/Faculty_AddElements/UpdateStaff';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const allRoutes=createBrowserRouter([
   {
-    path : '/',
-    element : <App/>
+    path: '/home',
+    element: <App/>
   },
   {
-    path : '/tech',
-    element : <Technician/>
+    path: '/tech',
+    element: <Technician/>
   },
   {
-    path : '/student',
-    element : <Student/>
+    path: '/student',
+    element: <Student/>
   },
   {
-    path : '/acc',
-    element : <Account/>
+    path: '/acc',
+    element: <Account/>
   },
   {
     path : '/acc/pay',
@@ -75,23 +76,16 @@ const allRoutes=createBrowserRouter([
     element : <Login/>
   },
   {
-    path : '*',
-    element : <Error404/>
+    path: '*',
+    element: <Error404/>
   }
-  
-])
+]);
 
-
-
-root.render(
+ReactDOM.render(
   <React.StrictMode>
-    {/* <App /> */}
-    {/* <RouterProvider router={allRoutes}/> */}
     <RouterProvider router={allRoutes}/>
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

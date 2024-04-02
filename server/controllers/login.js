@@ -54,7 +54,7 @@ exports.loginTechnician = async (req, res) => {
         if (!username || !password) {
             return res.status(400).json({ error: 'Username and password are required' });
         }
-        const query = 'SELECT mis,name FROM students WHERE MIS = ? AND password = ?';
+        const query = 'SELECT mis,name FROM technicians WHERE MIS = ? AND password = ?';
 
         // Execute the query
         connection.query(query, [username, password], (err, results) => {
@@ -71,7 +71,7 @@ exports.loginTechnician = async (req, res) => {
             res.status(200).json({
                 message: 'Login successful',
                 data: results,
-                user_type: 'normal'
+                user_type: 'technician'
             });
         });
 
@@ -114,7 +114,7 @@ exports.loginAdmin = async (req, res) => {
             res.status(200).json({
                 message: 'Login successful',
                 data: results,
-                user_type: 'normal'
+                user_type: 'admin',
             });
         });
 
@@ -157,7 +157,7 @@ exports.loginAccountSection = async (req, res) => {
             res.status(200).json({
                 message: 'Login successful',
                 data: results,
-                user_type: 'normal'
+                user_type: 'accounts',
             });
         });
 
