@@ -1,6 +1,45 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const UserLogin = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/loginUser",
+        { username, password }
+      );
+      console.log(response.data);
+      const mis = response.data.data[0].mis;
+      const name = response.data.data[0].name;
+
+      const user_type = response.data.user_type;
+     
+      // Display login success message for 1 second
+      console.log("Login successful");
+
+      // Save mis and name to sessionStorage
+      sessionStorage.setItem("mis", mis);
+      sessionStorage.setItem("name", name);
+      sessionStorage.setItem("user_type", user_type);
+      sessionStorage.setItem("isLogin", true);
+
+
+
+      // Navigate to home if user_type is 'normal'
+      if (user_type === "normal") {
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error("Login error:", error.response.data.error);
+      // Handle error, show error message to the user, etc.
+    }
+  };
+
   return (
     <>
       <div className="max-w-md mx-auto p-4 bg-blue-300 shadow-md rounded-md">
@@ -15,6 +54,8 @@ const UserLogin = () => {
             <input
               type="text"
               className="mt-1 p-2 w-full border rounded-md"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
@@ -25,12 +66,15 @@ const UserLogin = () => {
             <input
               type="password"
               className="mt-1 p-2 w-full border rounded-md"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
           <div className="flex items-center justify-between">
             <button
               type="button"
+              onClick={handleLogin}
               className="bg-blue-800 text-white px-6 py-2 rounded-md hover:bg-green-900 transition-all duration-300"
             >
               Login
@@ -49,6 +93,40 @@ const UserLogin = () => {
 };
 
 const TechnicianLogin = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/loginUser",
+        { username, password }
+      );
+      console.log(response.data);
+      const mis = response.data.data[0].mis;
+      const name = response.data.data[0].name;
+      const user_type = response.data.user_type;
+     
+      // Display login success message for 1 second
+      console.log("Login successful");
+
+      // Save mis, name, and user_type to sessionStorage
+      sessionStorage.setItem("mis", mis);
+      sessionStorage.setItem("name", name);
+      sessionStorage.setItem("user_type", user_type);
+      sessionStorage.setItem("isLogin", true);
+
+      // Navigate to home if user_type is 'normal'
+      if (user_type === "technician") {
+        navigate("/tech");
+      }
+    } catch (error) {
+      console.error("Login error:", error.response.data.error);
+      // Handle error, show error message to the user, etc.
+    }
+  };
+
   return (
     <>
       <div className="max-w-md mx-auto p-4 bg-blue-300 shadow-md rounded-md">
@@ -64,7 +142,8 @@ const TechnicianLogin = () => {
               type="text"
               id="username"
               name="username"
-              // onChange={(e) => setUsername(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="mt-1 p-2 w-full border rounded-md"
               required
             />
@@ -75,6 +154,8 @@ const TechnicianLogin = () => {
             </label>
             <input
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="mt-1 p-2 w-full border rounded-md"
               required
             />
@@ -82,6 +163,7 @@ const TechnicianLogin = () => {
           <div className="flex items-center justify-between">
             <button
               type="button"
+              onClick={handleLogin}
               className="bg-blue-800 text-white px-6 py-2 rounded-md hover:bg-green-900 transition-all duration-300"
             >
               Login
@@ -99,11 +181,46 @@ const TechnicianLogin = () => {
   );
 };
 
+
 const AccountSection = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/loginUser",
+        { username, password }
+      );
+      console.log(response.data);
+      const mis = response.data.data[0].mis;
+      const name = response.data.data[0].name;
+      const user_type = response.data.user_type;
+     
+      // Display login success message for 1 second
+      console.log("Login successful");
+
+      // Save mis, name, and user_type to sessionStorage
+      sessionStorage.setItem("mis", mis);
+      sessionStorage.setItem("name", name);
+      sessionStorage.setItem("user_type", user_type);
+      sessionStorage.setItem("isLogin", true);
+
+      // Navigate to home if user_type is 'normal'
+      if (user_type === "accounts") {
+        navigate("/acc");
+      }
+    } catch (error) {
+      console.error("Login error:", error.response.data.error);
+      // Handle error, show error message to the user, etc.
+    }
+  };
+
   return (
     <>
       <div className="max-w-md mx-auto p-4 bg-blue-300 shadow-md rounded-md">
-        <h2 className="text-4xl text-center font-bold mb-4 mt-10 ">
+        <h2 className="text-4xl text-center font-bold mb-4 mt-10">
           Account Section Login
         </h2>
         <form>
@@ -115,7 +232,8 @@ const AccountSection = () => {
               type="text"
               id="username"
               name="username"
-              // onChange={(e) => setUsername(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="mt-1 p-2 w-full border rounded-md"
               required
             />
@@ -126,6 +244,8 @@ const AccountSection = () => {
             </label>
             <input
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="mt-1 p-2 w-full border rounded-md"
               required
             />
@@ -133,6 +253,7 @@ const AccountSection = () => {
           <div className="flex items-center justify-between">
             <button
               type="button"
+              onClick={handleLogin}
               className="bg-blue-800 text-white px-6 py-2 rounded-md hover:bg-green-900 transition-all duration-300"
             >
               Login
@@ -151,11 +272,45 @@ const AccountSection = () => {
 };
 
 const FacultyLogin = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/loginUser",
+        { username, password }
+      );
+      console.log(response.data);
+      const mis = response.data.data[0].mis;
+      const name = response.data.data[0].name;
+      const user_type = response.data.user_type;
+     
+      // Display login success message for 1 second
+      console.log("Login successful");
+
+      // Save mis, name, and user_type to sessionStorage
+      sessionStorage.setItem("mis", mis);
+      sessionStorage.setItem("name", name);
+      sessionStorage.setItem("user_type", user_type);
+      sessionStorage.setItem("isLogin", true);
+
+      // Navigate to home if user_type is 'normal'
+      if (user_type === "admin") {
+        navigate("/faculty");
+      }
+    } catch (error) {
+      console.error("Login error:", error.response.data.error);
+      // Handle error, show error message to the user, etc.
+    }
+  };
+
   return (
     <>
       <div className="max-w-md mx-auto p-4 bg-blue-300 shadow-md rounded-md">
         <h2 className="text-4xl text-center font-bold mb-4 mt-10">
-          Faculty Login
+        Faculty Login
         </h2>
         <form>
           <div className="mb-4">
@@ -166,7 +321,8 @@ const FacultyLogin = () => {
               type="text"
               id="username"
               name="username"
-              // onChange={(e) => setUsername(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="mt-1 p-2 w-full border rounded-md"
               required
             />
@@ -177,6 +333,8 @@ const FacultyLogin = () => {
             </label>
             <input
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="mt-1 p-2 w-full border rounded-md"
               required
             />
@@ -184,6 +342,7 @@ const FacultyLogin = () => {
           <div className="flex items-center justify-between">
             <button
               type="button"
+              onClick={handleLogin}
               className="bg-blue-800 text-white px-6 py-2 rounded-md hover:bg-green-900 transition-all duration-300"
             >
               Login

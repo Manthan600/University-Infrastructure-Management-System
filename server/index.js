@@ -10,9 +10,10 @@ const registerComplaints = require("./routes/registerComplintsRoutes");
 const technicians = require("./routes/technicianRoutes");
 const admin = require("./routes/adminRoutes");
 
+const cors = require('cors')
 const app = express();
 
-
+app.use(cors());
 require("dotenv").config();
 
 const PORT = process.env.PORT || 4000;
