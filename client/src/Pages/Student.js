@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Header from '../common/Header';
 import './Student.css';
+import { Alert } from 'react-bootstrap';
 
 export default function Student() {
   const [textareaHeight, setTextareaHeight] = useState(50); // Initial height of 50px
   const [selectedOption, setSelectedOption] = useState('complaint'); // Initial selected option
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleTextareaChange = (event) => {
     const element = event.target;
@@ -14,6 +16,14 @@ export default function Student() {
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 3000);
   };
 
   return (
@@ -51,7 +61,7 @@ export default function Student() {
           <div className="box">
             <div className="head">
               <h2>Make a complaint</h2>
-              <h4>MIS : Name/Username</h4>
+              <h3>MIS : Name/Username</h3>
             </div>
 
             <div className="complaint">
@@ -84,7 +94,7 @@ export default function Student() {
                 <button class="button-82-pushable" role="button">
                   <span class="button-82-shadow"></span>
                   <span class="button-82-edge"></span>
-                  <span class="button-82-front text">
+                  <span class="button-82-front text" onClick={handleSubmit}>
                     Submit
                   </span>
                 </button>
@@ -144,6 +154,10 @@ export default function Student() {
 
         </div>
       )}
+
+<Alert show={showAlert} variant="success" style={{ position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999' }}>
+            Successfully Registered ✔
+          </Alert>
     </div>
   );
 }
