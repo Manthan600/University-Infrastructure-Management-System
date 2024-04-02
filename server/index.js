@@ -1,5 +1,5 @@
 const express = require('express');
-
+const cors = require('cors');
 const login = require('./controllers/login');
 const registerComplaints_db = require('./controllers/registerComplaints');
 const technicians_db = require('./controllers/technicianDashboard');
@@ -20,6 +20,7 @@ const PORT = process.env.PORT || 4000;
 // Parse middleware
 
 app.use(express.json());
+app.use(cors());
 
 
 app.use("/api/v1",loginUser);
