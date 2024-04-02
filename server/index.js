@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors');
+const cors = require('cors')
 const login = require('./controllers/login');
 const registerComplaints_db = require('./controllers/registerComplaints');
 const technicians_db = require('./controllers/technicianDashboard');
@@ -10,9 +10,10 @@ const registerComplaints = require("./routes/registerComplintsRoutes");
 const technicians = require("./routes/technicianRoutes");
 const admin = require("./routes/adminRoutes");
 
+const cors = require('cors')
 const app = express();
 
-
+app.use(cors());
 require("dotenv").config();
 
 const PORT = process.env.PORT || 4000;
@@ -20,8 +21,7 @@ const PORT = process.env.PORT || 4000;
 // Parse middleware
 
 app.use(express.json());
-app.use(cors());
-
+app.use(cors())
 
 app.use("/api/v1",loginUser);
 app.use("/api/v1",registerComplaints);

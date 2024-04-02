@@ -54,6 +54,7 @@ exports.loginTechnician = async (req, res) => {
         if (!username || !password) {
             return res.status(400).json({ error: 'Username and password are required' });
         }
+
         const query = 'SELECT tech_id,name, field FROM technicians WHERE tech_id = ? AND password = ?';
 
         // Execute the query
@@ -114,7 +115,7 @@ exports.loginAdmin = async (req, res) => {
             res.status(200).json({
                 message: 'Login successful',
                 data: results,
-                user_type: 'admin'
+                user_type: 'admin',
             });
         });
 
@@ -157,7 +158,7 @@ exports.loginAccountSection = async (req, res) => {
             res.status(200).json({
                 message: 'Login successful',
                 data: results,
-                user_type: 'accountSection'
+                user_type: 'accounts',
             });
         });
 

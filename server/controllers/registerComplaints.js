@@ -33,7 +33,6 @@ exports.registerComplaints = (req, res) => {
                 DEVICE_COMPLAINTS = "proj_complaints";                
             }
 
-
             // Check if device exists in DB
             const checkDeviceQuery = `SELECT COUNT(*) AS deviceCount FROM ${DEVICE_TABLE_NAME} WHERE ${DEVICE_ID} = ?`;
             connection.query(checkDeviceQuery, [device_id], (err, rows) => {
