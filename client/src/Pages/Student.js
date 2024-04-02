@@ -1,12 +1,203 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+// import Header from '../common/Header';
+// import './Student.css';
+// import { Alert } from 'react-bootstrap';
+
+// export default function Student() {
+//   const [textareaHeight, setTextareaHeight] = useState(50); // Initial height of 50px
+//   const [selectedOption, setSelectedOption] = useState('complaint'); // Initial selected option
+//   const [showAlert, setShowAlert] = useState(false);
+
+//   const handleTextareaChange = (event) => {
+//     const element = event.target;
+//     const lines = element.value.split('\n').length;
+//     setTextareaHeight(lines * 40); // Adjust this value as needed
+//   };
+
+//   const handleOptionChange = (event) => {
+//     setSelectedOption(event.target.value);
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     setShowAlert(true);
+//     setTimeout(() => {
+//       setShowAlert(false);
+//     }, 3000);
+//   };
+
+//   return (
+//     <div>
+//       <Header />
+
+//       <div className='options'>
+//         <input
+//           type="radio"
+//           id="complaint"
+//           name="option"
+//           value="complaint"
+//           checked={selectedOption === 'complaint'}
+//           onChange={handleOptionChange}
+//           className="option-button"
+//         />
+//         <label className='subpages' htmlFor="complaint">Complaint</label>
+
+//         <input
+//           type="radio"
+//           id="status"
+//           name="option"
+//           value="status"
+//           checked={selectedOption === 'status'}
+//           onChange={handleOptionChange}
+//           className="option-button"
+//         />
+//         <label className='subpages' htmlFor="status">Check Status</label>
+//       </div>
+
+
+//       {selectedOption === 'complaint' && (
+//         <div>
+//           <h2>Welcome Student!</h2>
+//           <div className="box">
+//             <div className="head">
+//               <h2>Make a complaint</h2>
+//               <h3>MIS : Name/Username</h3>
+//             </div>
+
+//             <div className="complaint">
+//               <form action="">
+//                 <label htmlFor="device">Device type : </label>
+//                 <br />
+//                 <select className="custom-select" name="device" id="device">
+//                   <option value="PC">Computers</option>
+//                   <option value="AC">AC</option>
+//                   <option value="Projector">Projector</option>
+//                   <option value="Other">Other</option>
+//                 </select>
+//                 <br />
+//                 <label htmlFor="">Device ID : </label>
+//                 {/* <h3>DEVICE123</h3> */}
+//                 {/* <p className='dev'>DEVICE123</p> */}
+//                 <input type="text" value='dev' />
+//                 <br />
+//                 <label htmlFor="">Description of problem : </label>
+//                 <br />
+//                 <textarea
+//                   name="description"
+//                   id="description"
+//                   cols=""
+//                   rows=""
+//                   style={{ height: `${textareaHeight}px` }}
+//                   onChange={handleTextareaChange}
+//                 ></textarea>
+//                 <br />
+
+//                 <button class="button-82-pushable" role="button">
+//                   <span class="button-82-shadow"></span>
+//                   <span class="button-82-edge"></span>
+//                   <span class="button-82-front text" onClick={handleSubmit}>
+//                     Submit
+//                   </span>
+//                 </button>
+
+
+//               </form>
+//             </div>
+//           </div>
+
+//           <div className="foot"></div>
+//         </div>
+//       )}
+
+//       {selectedOption === 'status' && (
+//         <div>
+//           <h2>Welcome Student!</h2>
+
+//           <div className="box">
+//             <div className="head">
+//               <h2>Check Status</h2>
+//               <h4>MIS : Name/Username</h4>
+//             </div>
+//             <table class="table table-bordered mb-5" >
+//               <thead >
+//                 <tr>
+//                   <th>Token ID</th>
+//                   <th>Student ID</th>
+//                   <th>Device ID</th>
+//                   <th>Description</th>
+//                   <th>Complaint Date</th>
+//                   <th>Resolved Date</th>
+//                   <th>Technician-ID</th>
+//                   <th>Resolved</th>
+//                 </tr>
+//               </thead>
+//               <tbody>
+
+//                 <tr>
+//                   <td>1</td>
+//                   <td>12345</td>
+//                   <td>dev1</td>
+//                   <td>complaint</td>
+//                   <td>1/1/2024</td>
+//                   <td>-</td>
+//                   <td>Tech1</td>
+//                   <td class="text-center">
+//                     <input type="checkbox" />
+//                   </td>
+
+//                 </tr>
+//               </tbody>
+//             </table>
+//           </div>
+
+
+//           <div className="foot"></div>
+
+//         </div>
+//       )}
+
+// <Alert show={showAlert} variant="success" style={{ position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999' }}>
+//             Successfully Registered ✔
+//           </Alert>
+//     </div>
+//   );
+// }
+
+
+import React, { useState, useEffect } from 'react';
 import Header from '../common/Header';
 import './Student.css';
+import axios from 'axios'; // Import axios for making HTTP requests
 import { Alert } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Student() {
   const [textareaHeight, setTextareaHeight] = useState(50); // Initial height of 50px
   const [selectedOption, setSelectedOption] = useState('complaint'); // Initial selected option
   const [showAlert, setShowAlert] = useState(false);
+  const [showErrorAlert409, setShowErrorAlert409] = useState(false);
+  const [showErrorAlert404, setShowErrorAlert404] = useState(false);
+  const [showErrorAlert500, setShowErrorAlert500] = useState(false);
+  const [ShowErrorAlertOther, setShowErrorAlertOther] = useState(false);
+  const [formData, setFormData] = useState({
+    mis: '',
+    device_id: '',
+    description: '',
+    user_type: '',
+    complaint_type: ''
+  });
+
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const isLoggedIn = sessionStorage.getItem('isLogin');
+
+  //   if (!isLoggedIn) {
+  //     navigate('/login'); 
+  //   }
+  // }, [navigate]);
+
 
   const handleTextareaChange = (event) => {
     const element = event.target;
@@ -18,13 +209,89 @@ export default function Student() {
     setSelectedOption(event.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setShowAlert(true);
-    setTimeout(() => {
-      setShowAlert(false);
-    }, 3000);
+    try {
+      const response = await axios.post('http://localhost:4000/api/v1/registerComplaints', formData);
+      console.log('Server response:', response.data);
+
+      setShowErrorAlert404(false);
+      setShowErrorAlert500(false);
+      setShowErrorAlert409(false);
+      setShowErrorAlertOther(false);
+      setShowAlert(true);
+
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+      
+      
+
+      setFormData({
+        mis: '',
+        device_id: '',
+        description: '',
+        user_type: '',
+        complaint_type: ''
+      });
+    } catch (error) {
+
+      if (error.response && error.response.status === 409) {
+        setShowAlert(false); // Close the success alert if it's already open
+        setShowErrorAlert404(false); // Close the success alert if it's already open
+        setShowErrorAlert500(false); // Close the success alert if it's already open
+        setShowErrorAlertOther(false); // Close the success alert if it's already open
+        setShowErrorAlert409(true); // Show error alert
+
+        setTimeout(() => {
+          setShowErrorAlert409(false);
+        }, 3000);
+      }
+      else if (error.response && error.response.status === 500) {
+        setShowAlert(false); // Close the success alert if it's already open
+        setShowErrorAlert404(false); // Close the success alert if it's already open
+        setShowErrorAlert409(false); // Close the success alert if it's already open
+        setShowErrorAlertOther(false); // Close the success alert if it's already open
+        setShowErrorAlert500(true); // Show error alert
+
+        setTimeout(() => {
+          setShowErrorAlert500(false);
+        }, 3000);
+      } else if (error.response && error.response.status === 404) {
+        setShowAlert(false); // Close the success alert if it's already open
+        setShowErrorAlert409(false); // Close the success alert if it's already open
+        setShowErrorAlert500(false); // Close the success alert if it's already open
+        setShowErrorAlertOther(false); // Close the success alert if it's already open
+        setShowErrorAlert404(true); // Show error alert
+
+        
+        setTimeout(() => {
+          setShowErrorAlert404(false);
+        }, 3000);
+
+      } else {
+        setShowAlert(false); // Close the success alert if it's already open
+        setShowErrorAlert409(false); // Close the success alert if it's already open
+        setShowErrorAlert500(false); // Close the success alert if it's already open
+        setShowErrorAlertOther(false); // Close the success alert if it's already open
+        setShowErrorAlert404(false); // Show error alert
+        setShowErrorAlertOther(true); // Show error alert
+        console.error('Error submitting data:', error);
+        // Handle other types of errors (e.g., network error)
+      }
+
+    }
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+
 
   return (
     <div>
@@ -55,6 +322,7 @@ export default function Student() {
       </div>
 
 
+
       {selectedOption === 'complaint' && (
         <div>
           <h2>Welcome Student!</h2>
@@ -65,41 +333,28 @@ export default function Student() {
             </div>
 
             <div className="complaint">
-              <form action="">
-                <label htmlFor="device">Device type : </label>
-                <br />
-                <select className="custom-select" name="device" id="device">
-                  <option value="PC">Computers</option>
-                  <option value="AC">AC</option>
-                  <option value="Projector">Projector</option>
-                  <option value="Other">Other</option>
-                </select>
-                <br />
-                <label htmlFor="">Device ID : </label>
-                {/* <h3>DEVICE123</h3> */}
-                <p className='dev'>DEVICE123</p>
-                <br />
-                <label htmlFor="">Description of problem : </label>
-                <br />
-                <textarea
-                  name="description"
-                  id="description"
-                  cols=""
-                  rows=""
-                  style={{ height: `${textareaHeight}px` }}
-                  onChange={handleTextareaChange}
-                ></textarea>
-                <br />
-
-                <button class="button-82-pushable" role="button">
-                  <span class="button-82-shadow"></span>
-                  <span class="button-82-edge"></span>
-                  <span class="button-82-front text" onClick={handleSubmit}>
-                    Submit
-                  </span>
-                </button>
-
-
+              <form onSubmit={handleSubmit}>
+                <div>
+                  <label>MIS:</label>
+                  <input type="text" name="mis" value={formData.mis} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>Device ID:</label>
+                  <input type="text" name="device_id" value={formData.device_id} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>Description:</label>
+                  <textarea name="description" value={formData.description} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>User Type:</label>
+                  <input type="text" name="user_type" value={formData.user_type} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>Complaint Type:</label>
+                  <input type="text" name="complaint_type" value={formData.complaint_type} onChange={handleChange} />
+                </div>
+                <button type="submit">Submit</button>
               </form>
             </div>
           </div>
@@ -155,9 +410,21 @@ export default function Student() {
         </div>
       )}
 
-<Alert show={showAlert} variant="success" style={{ position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999' }}>
-            Successfully Registered ✔
-          </Alert>
+      <Alert show={showAlert} variant="success" style={{ position: 'absolute', top: '100px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999' }}>
+        Successfully Registered ✔
+      </Alert>
+      <Alert show={showErrorAlert409} variant="danger" style={{ position: 'absolute', top: '100px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999' }}>
+        Already Faulty X
+      </Alert>
+      <Alert show={showErrorAlert500} variant="danger" style={{ position: 'absolute', top: '100px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999' }}>
+        Internal Server Error X
+      </Alert>
+      <Alert show={showErrorAlert404} variant="danger" style={{ position: 'absolute', top: '100px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999' }}>
+        Device Not Found Error X
+      </Alert>
+      <Alert show={ShowErrorAlertOther} variant="danger" style={{ position: 'absolute', top: '100px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999' }}>
+        Device Not Found Error X
+      </Alert>
     </div>
   );
 }
