@@ -11,7 +11,7 @@ export default function Technician() {
       <div className="box">
         <div className="head">
           <h2>Handle complaints</h2>
-          <h4>Technician-ID</h4>
+          <h3>Technician-ID</h3>
         </div>
 
         <div className="complaint">

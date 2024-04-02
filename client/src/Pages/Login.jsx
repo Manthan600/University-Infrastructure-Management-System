@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import 'tailwindcss/tailwind.css'; // Import Tailwind CSS styles
 
 const UserLogin = () => {
   const [username, setUsername] = useState("");
