@@ -4,13 +4,14 @@ const login = require('./controllers/login');
 const registerComplaints_db = require('./controllers/registerComplaints');
 const technicians_db = require('./controllers/technicianDashboard');
 const admin_db = require('./controllers/adminDashboard');
+const devices_db = require('./controllers/deviceController');
 
 const loginUser = require("./routes/loginRoutes");
 const registerComplaints = require("./routes/registerComplintsRoutes");
 const technicians = require("./routes/technicianRoutes");
+const devices = require("./routes/devices");
 const admin = require("./routes/adminRoutes");
 
-const cors = require('cors')
 const app = express();
 
 app.use(cors());
@@ -23,14 +24,15 @@ const PORT = process.env.PORT || 4000;
 app.use(express.json());
 app.use(cors())
 
-app.use("/api/v1",loginUser);
-app.use("/api/v1",registerComplaints);
-app.use("/api/v1",technicians);
-app.use("/api/v1",admin);
+app.use("/api/v1", loginUser);
+app.use("/api/v1", registerComplaints);
+app.use("/api/v1", technicians);
+app.use("/api/v1", admin);
+app.use("/api/v1", devices);
 
 // start server
 
-app.listen(PORT, () =>{
+app.listen(PORT, () => {
     console.log(`Server started at port number ${PORT}`);
 })
 
@@ -40,10 +42,11 @@ const connection = dbConnect();
 login.setup(connection);
 registerComplaints_db.setup(connection);
 technicians_db.setup(connection);
+devices_db.setup(connection);
 admin_db.setup(connection);
 
 
-app.get("/", (req,res) => {
+app.get("/", (req, res) => {
     res.send("<h1> This is my yard </h1>")
 })
 

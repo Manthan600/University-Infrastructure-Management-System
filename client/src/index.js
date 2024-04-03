@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter
-import './index.css'; 
+import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {createBrowserRouter,RouterProvider} from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Student from './Pages/Student'
 import Faculty from './Pages/Faculty'
 import Account from './Pages/Account'
@@ -22,68 +22,68 @@ import UpdateStaff from './Pages/Faculty_AddElements/UpdateStaff';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const allRoutes=createBrowserRouter([
+const allRoutes = createBrowserRouter([
   {
     path: '/home',
-    element: <App/>
+    element: <App />
   },
   {
     path: '/tech',
-    element: <Technician/>
+    element: <Technician />
   },
   {
     path: '/student',
-    element: <Student/>
+    element: <Student />
   },
   {
     path: '/acc',
-    element: <Account/>
+    element: <Account />
   },
   {
-    path : '/acc/pay',
-    element : <Pay/>
+    path: '/acc/pay',
+    element: <Pay />
   },
   {
-    path : '/faculty',
-    element : <Faculty/>
+    path: '/faculty',
+    element: <Faculty />
   },
   {
-    path : '/adddevices',
-    element : <AddDevices/>
+    path: '/adddevices',
+    element: <AddDevices />
   },
   {
-    path : '/addstaff',
-    element : <AddStaff/>
+    path: '/addstaff',
+    element: <AddStaff />
   },
   {
-    path : '/updatedevices',
-    element : <UpdateDevies/>
+    path: '/updatedevices',
+    element: <UpdateDevies />
   },
   {
-    path : '/updatestaff',
-    element : <UpdateStaff/>
+    path: '/updatestaff',
+    element: <UpdateStaff />
   },
   {
     path: "/chat",
-     element:<Chat/> 
+    element: <Chat />
   },
   {
     path: "/about",
-     element:<AboutUs/> 
+    element: <AboutUs />
   },
   {
-    path : '/login',
-    element : <Login/>
+    path: '/',
+    element: <Login />
   },
   {
     path: '*',
-    element: <Error404/>
+    element: <Error404 />
   }
 ]);
 
 ReactDOM.render(
   <React.StrictMode>
-    <RouterProvider router={allRoutes}/>
+    <RouterProvider router={allRoutes} />
   </React.StrictMode>,
   document.getElementById('root')
 );
