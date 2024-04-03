@@ -1,5 +1,6 @@
 import React from 'react'
 import Header from '../common/Header'
+import { Link } from 'react-router-dom'
 
 export default function Account() {
   return (
@@ -10,7 +11,7 @@ export default function Account() {
         <div className="box">
           <div className="head">
             <h2>Bills</h2>
-            <h4>AccNo/Bank</h4>
+            <h3>AccNo/Bank</h3>
           </div>
 
           <div className="complaint">
@@ -43,8 +44,8 @@ export default function Account() {
                     <td class="text-center">
                       {/* <form method="POST" action=""> */}
                       <form action="">
-                        <button onClick={(e) => { e.preventDefault() }} type="submit" class="btn btn-primary">Pay</button>
-                      </form>
+                        <Link to="/acc/pay" className='btn btn-primary'>Pay</Link>
+                     </form>
                     </td>
 
                   </tr>

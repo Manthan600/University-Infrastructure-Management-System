@@ -6,44 +6,32 @@ body {
     margin: 0;
     padding: 0;
     padding-bottom: 20px;
-    /* background-color: #c5fefb; */
-    /* background-color: white; */
-    /* background-color: rgb(189, 118, 231); */
-    /* background-image: url('../images/complain.png'); */
-    
-    /* background-size: cover; Cover the entire background */
-    background-repeat: no-repeat; /* Prevent the image from repeating */
-    background-size: 50vw auto; /* Set width to 50vw and auto height */
-    background-repeat: no-repeat; /* Prevent the image from repeating */
-    background-position: center top 30px; /* Center the background horizonZ*/
-    /* background-color: rgb(135, 255, 255 ); */
-    /* background-color: #f4bd60; */
+    background-repeat: no-repeat; 
+    background-size: 50vw auto; 
+    background-repeat: no-repeat; 
+    background-position: center top 30px; 
     background-color: #8d54f7;
 }
 
 h2{
-    text-align: center;
-    margin: 25px 0;
-    font-family: 'Roboto', sans-serif;
-    font-family: 'Lato', sans-serif;
-    font-size: 3rem;
-    font-weight: 900;
-
+  text-align: center !important;
+  margin: 25px 0 !important;
+  font-family: 'Lato', sans-serif !important;
+  font-size: 3rem !important;
+  font-weight: 900 !important;
+  text-transform: uppercase;
 }
 
-
+h4{
+  text-decoration: none !important;
+}
 .subpages:hover{
-    background-color: rgba(136, 231, 255, 0.2);
+    background-color: rgba(136, 231, 255, 0.2) !important;
 }
 .box {
-    /* width: 1000px; */
     width: 70vw;
     margin: auto;
-    /* background-color: rgb(255, 166, 0 ); */
-    /* background-color: rgba(64, 192, 192 , 0.5); */
-    background-color: rgb(255, 255, 255 ,0.85);
-    
-    /* background-color: rgb(255, 255, 255 , 0.9); */
+     background-color: rgb(255, 255, 255 );
     min-height: 70vh;
     border-radius: 9px;
     margin-top: 20px;
@@ -57,6 +45,7 @@ h2{
 
 .custom-select {
     min-width: 350px;
+    height: 3rem;
 }
 
 select {
@@ -64,19 +53,20 @@ select {
     -webkit-appearance: none;
     width: 90%;
     font-size: 1.15rem;
-    padding: 0.675em 6em 0.675em 1em;
+    padding: 0.675em 6em 0.675em 1em !important;
     background-color: #fff;
     border: 1px solid #caced1;
     border-radius: 0.25rem;
     color: #000;
     cursor: pointer;
     position: relative;
+    outline: none;
 }
 
 
 /* ************************************* check this  */
 select option:hover {
-    background-color: rgba(3, 191, 212, 0.5);
+    background-color: rgba(3, 191, 212, 0.5) !important;
 }
 
 
@@ -90,13 +80,13 @@ textarea {
     width: 90%;
     min-height: 100px;
     height: auto;
-    border: 0;
-    padding: 5px;
+    border: 1px solid rgb(201, 199, 199);
+    padding: 5px !important;
     box-sizing: border-box;
+    outline: none;
 }
 
 .complaint {
-    /* margin-left:  20px; */
     margin: 0 20px;
 }
 
@@ -163,20 +153,6 @@ form button:hover {
     font-size: x-large;
 
 }
-/*   
-  .option-button + label:not(:first-of-type) {
-    margin-left: 10px;
-  }
-  
-  .option-button:checked + label:first-of-type {
-    margin-right: 10px;
-  } */
-  
-
-
-
-
-
 /* CSS */
 .button-82-pushable {
     position: relative;
