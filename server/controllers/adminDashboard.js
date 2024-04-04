@@ -1,10 +1,11 @@
+const sendMail = require("../config/mail");
+const generateQRCode = require("../config/qrCode");
 let connection;
 
 exports.setup = (database) => {
     console.log(connection, " connection reaches admin page");
     connection = database;
 }
-
 exports.approveComplaint = async (req, res) => {
     try {
         const { token_id, device_type, user_type } = req.body;
@@ -29,20 +30,45 @@ exports.approveComplaint = async (req, res) => {
                 DEVICE_COMPLAINTS = "proj_complaints";
             }
 
-            approve_complaint_query = `UPDATE ${DEVICE_COMPLAINTS} SET admin_approval = '1' WHERE ${DEVICE_COMPLAINTS}.token_id = ?`;
-            connection.query(approve_complaint_query, [token_id], (err, results) => {
+            // Update complaint approval status
+            const approve_complaint_query = `UPDATE ${DEVICE_COMPLAINTS} SET admin_approval = '1' WHERE ${DEVICE_COMPLAINTS}.token_id = ?`;
+            connection.query(approve_complaint_query, [token_id], async (err, results) => {
                 if (err) {
                     console.error('Error approving complaints: ' + err.stack);
                     return res.status(500).json({ error: 'Internal server error' });
                 }
 
-                return res.status(200).json({
-                    data: results,
-                    message: `complaint with ${token_id} approved successfully.`
+                // Fetch technicians' email IDs from the "technicians" table
+                const fetchTechniciansQuery = `SELECT email FROM technicians WHERE field = ?`;
+                connection.query(fetchTechniciansQuery, [device_type], async (err, technicianResults) => {
+                    if (err) {
+                        console.error('Error fetching technicians: ' + err.stack);
+                        return res.status(500).json({ error: 'Internal server error' });
+                    }
+
+                    // Extract email IDs
+                    const technicianEmails = technicianResults.map(technician => technician.email);
+
+                    // Construct email content
+                    const emailContent = `A new complaint related to ${device_type} has been registered. Please accept the complaint to resolve it.`;
+
+                    // Send emails to all technicians
+                    try {
+                        await sendMail(null, null, '"Admin" <admin@example.com>', technicianEmails, "Complaint Approval", emailContent);
+
+                        console.log("Emails sent to all technicians.");
+
+                        return res.status(200).json({
+                            data: results,
+                            message: `Complaint with ${token_id} approved successfully. Emails sent to technicians.`,
+                        });
+                    } catch (emailError) {
+                        console.error('Error sending emails to technicians: ' + emailError.stack);
+                        return res.status(500).json({ error: 'Internal server error' });
+                    }
                 });
             });
         }
-
     }
     catch (err) {
         console.error(err);
@@ -51,9 +77,9 @@ exports.approveComplaint = async (req, res) => {
             success: false,
             data: 'Internal server error ',
             message: err.message
-        })
+        });
     }
-}
+};
 
 
 exports.addComputerModel = async (req, res) => {
@@ -211,6 +237,10 @@ exports.addDevice = async (req, res) => {
                         console.log(err.message);
                         return res.status(500).json({ error: 'Internal server error' });
                     }
+                    const url = `http://localhost:4000/api/v1/registerComplaintQR?device_id=${insertDeviceResults.insertId}&device_type=${device_type}`
+                    const filename = `./qrcodes/${device_type}${insertDeviceResults.insertId}.png`;
+                    generateQRCode(url, filename);
+                    
                 });
             }
             return res.status(200).json({
@@ -236,18 +266,114 @@ exports.addDevice = async (req, res) => {
     }
 }
 
-exports.addComputer = async (req, res) => {
+exports.adminApproveBill = async (req, res) => {
     try {
-        const { new_model, device_type, user_type, } = req.body;
+        const { bill_id, user_type } = req.body; // Assuming admin_id is available in the request
+
+        // Check if bill_id exists
+        if (user_type === "admin") {
+            const checkBillQuery = `SELECT * FROM bills WHERE bill_id = ?`;
+            connection.query(checkBillQuery, [bill_id], async (err, billResults) => {
+                if (err) {
+                    console.error('Error checking bill: ' + err.stack);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+
+                if (billResults.length === 0) {
+                    console.error('Bill not found.');
+                    return res.status(404).json({ error: 'Bill not found.' });
+                }
+
+                // Query to update the admin_approval column of the bills table
+                const approveBillQuery = `UPDATE bills SET admin_approval = true WHERE bill_id = ?`;
+
+                // Fetching technician's email using tech_id
+                const fetchTechnicianEmailQuery = `SELECT email FROM technicians WHERE tech_id = (SELECT tech_id FROM bills WHERE bill_id = ?)`;
+
+                // Execute the query to approve the bill
+                connection.query(approveBillQuery, [bill_id], async (err, results) => {
+                    if (err) {
+                        console.error('Error approving bill: ' + err.stack);
+                        return res.status(500).json({ error: 'Internal server error' });
+                    }
+
+                    // Fetching technician's email
+                    connection.query(fetchTechnicianEmailQuery, [bill_id], async (err, technicianResults) => {
+                        if (err) {
+                            console.error('Error fetching technician email: ' + err.stack);
+                            return res.status(500).json({ error: 'Internal server error' });
+                        }
+
+                        if (technicianResults.length === 0) {
+                            console.error('Technician email not found.');
+                            return res.status(404).json({ error: 'Technician email not found.' });
+                        }
+
+                        const technicianEmail = technicianResults[0].email;
+
+                        // Send email notification
+                        try {
+                            const adminEmail = "admin@example.com"; // Replace with admin's email
+                            const emailContent = `Bill with ID ${bill_id} has been approved by the admin. Please proceed with the payment process.`;
+                            await sendMail(null, null, adminEmail, [technicianEmail], "Bill Approved", emailContent);
+                            console.log("Email sent to technician regarding approved bill.");
+
+                            return res.status(200).json({
+                                message: `Bill with ID ${bill_id} approved successfully. Email sent to technician.`,
+                            });
+                        } catch (emailError) {
+                            console.error('Error sending email to technician: ' + emailError.stack);
+                            return res.status(500).json({ error: 'Internal server error' });
+                        }
+                    });
+                });
+            });
+        }
+        else {
+            res.status(401).json({
+                success: false,
+                data: 'Internal server error',
+                message: "Unouthorizes access"
+            });
+        }
     }
     catch (err) {
         console.error(err);
-        console.log(err);
         res.status(500).json({
             success: false,
-            data: 'Internal server error ',
+            data: 'Internal server error',
             message: err.message
-        })
+        });
     }
+};
 
-}
+exports.getAllBillsAdmin = async (req, res) => {
+    try {
+        const { user_type } = req.body;
+        if (user_type === "admin") {
+            const getNotApprovedBillsQuery = `SELECT * FROM bills WHERE admin_approval = false and acc_sec_approval = false`;
+
+            connection.query(getNotApprovedBillsQuery, (err, results) => {
+                if (err) {
+                    console.error('Error fetching not approved bills: ' + err.stack);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+
+                return res.status(200).json({ data: results });
+            });
+        }
+        else {
+            res.status(401).json({
+                success: false,
+                data: 'Unauthorized access',
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error',
+            message: err.message
+        });
+    }
+};

@@ -72,7 +72,7 @@ const allRoutes=createBrowserRouter([
      element:<AboutUs/> 
   },
   {
-    path : '/login',
+    path : '/',
     element : <Login/>
   },
   {
