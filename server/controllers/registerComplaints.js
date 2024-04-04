@@ -99,3 +99,23 @@ exports.registerComplaints = (req, res) => {
         })
     }
 }
+
+exports.registerComplaintQR = async(req,res) =>{
+    try{
+        const device_id = req.query.device_id;
+        const device_type = req.query.device_type;
+
+        res.redirect("http://localhost:3000/");
+
+    }
+    catch (err) {
+        console.error(err);
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            data: 'Internal server error ',
+            message: err.message
+        })
+    }
+
+};
