@@ -4,13 +4,14 @@ const login = require('./controllers/login');
 const registerComplaints_db = require('./controllers/registerComplaints');
 const technicians_db = require('./controllers/technicianDashboard');
 const admin_db = require('./controllers/adminDashboard');
-const devices_db = require('./controllers/deviceController');
+const accounts_db = require('./controllers/accountSectionDashboard');
 
 const loginUser = require("./routes/loginRoutes");
 const registerComplaints = require("./routes/registerComplintsRoutes");
 const technicians = require("./routes/technicianRoutes");
 const devices = require("./routes/devices");
 const admin = require("./routes/adminRoutes");
+const accountSection = require("./routes/accountsRoutes");
 
 const app = express();
 
@@ -24,11 +25,12 @@ const PORT = process.env.PORT || 4000;
 app.use(express.json());
 app.use(cors())
 
-app.use("/api/v1", loginUser);
-app.use("/api/v1", registerComplaints);
-app.use("/api/v1", technicians);
-app.use("/api/v1", admin);
-app.use("/api/v1", devices);
+app.use("/api/v1",loginUser);
+app.use("/api/v1",registerComplaints);
+app.use("/api/v1",technicians);
+app.use("/api/v1",admin);
+app.use("/api/v1",accountSection);
+
 
 // start server
 
@@ -44,6 +46,7 @@ registerComplaints_db.setup(connection);
 technicians_db.setup(connection);
 devices_db.setup(connection);
 admin_db.setup(connection);
+accounts_db.setup(connection);
 
 
 app.get("/", (req, res) => {
