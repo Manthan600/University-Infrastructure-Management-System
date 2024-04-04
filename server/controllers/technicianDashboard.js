@@ -7,9 +7,15 @@ exports.setup = (database) => {
 }
 
 
+
+
 exports.getAllComplaints = async (req, res) => {
     try {
-        const { tech_type, user_type } = req.body;
+        // const { user_type, tech_id } = req.body;
+        const tech_id = 110002;
+        const tech_type = "computer"; // Hardcoded for testing
+        user_type = "technician";
+
         if (user_type === "technician") {
             let DEVICE_TABLE_NAME;
             let DEVICE_ID;
@@ -19,25 +25,34 @@ exports.getAllComplaints = async (req, res) => {
                 DEVICE_TABLE_NAME = "computer";
                 DEVICE_ID = "comp_id";
                 DEVICE_COMPLAINTS = "comp_complaints";
-            }
-            else if (tech_type === "ac") {
+
+            } else if (tech_type === "ac") {
                 DEVICE_TABLE_NAME = "ac";
                 DEVICE_ID = "ac_id";
                 DEVICE_COMPLAINTS = "ac_complaints";
-            }
-            else if (tech_type === "projector") {
+            } else if (tech_type === "projector") {
+
                 DEVICE_TABLE_NAME = "projector";
                 DEVICE_ID = "proj_id";
                 DEVICE_COMPLAINTS = "proj_complaints";
             }
 
-            get_complaints_query = `SELECT dc.token_id , dc.description , dc.${DEVICE_ID}, dc.complaint_date, dt.Company FROM ${DEVICE_COMPLAINTS} dc JOIN ${DEVICE_TABLE_NAME} dt on dc.${DEVICE_ID} = dt.${DEVICE_ID} WHERE dc.tech_id IS NULL AND dc.admin_approval = true; `
+            const get_complaints_query = `
+                SELECT dc.token_id, dc.description, dc.${DEVICE_ID}, dc.complaint_date, dt.Company, dc.student_id ,dc.resolved_date,dc.tech_id
+                FROM ${DEVICE_COMPLAINTS} dc 
+                JOIN ${DEVICE_TABLE_NAME} dt ON dc.${DEVICE_ID} = dt.${DEVICE_ID} 
+                WHERE (dc.tech_id IS NULL or dc.tech_id= ? ) AND dc.admin_approval = true;
+            `;
 
-            connection.query(get_complaints_query, [], (err, results) => {
+
+            connection.query(get_complaints_query, [tech_id], (err, results) => {
                 if (err) {
-                    console.error('Error retriving complaints: ' + err.stack);
+                    console.error('Error retrieving complaints: ' + err.stack);
+
                     return res.status(500).json({ error: 'Internal server error' });
                 }
+
+                console.log('Retrieved complaints:', results); // Add logging here to see the results
 
                 return res.status(200).json({
                     data: results
@@ -47,20 +62,26 @@ exports.getAllComplaints = async (req, res) => {
 
         }
     }
-    catch (err) {
+
+           catch (err) {
+
         console.error(err);
-        console.log(err);
         res.status(500).json({
             success: false,
-            data: 'Internal server error ',
+            data: 'Internal server error',
             message: err.message
-        })
+        });
     }
 };
+
+
+
+
 
 exports.acceptComplaints = async (req, res) => {
     try {
         const { tech_type, user_type, token_id, tech_id } = req.body;
+
         if (user_type === "technician") {
             let DEVICE_TABLE_NAME;
             let DEVICE_ID;
@@ -84,13 +105,13 @@ exports.acceptComplaints = async (req, res) => {
 
             const accept_complaints_query = `UPDATE ${DEVICE_COMPLAINTS} SET tech_id = ? WHERE token_id = ?`;
 
-            connection.query(accept_complaints_query, [tech_id, token_id], async (err, results) => {
+          connection.query(accept_complaints_query, [tech_id, token_id], async (err, results) => {
                 if (err) {
                     console.error('Error accepting complaints: ' + err.stack);
                     return res.status(500).json({ error: 'Internal server error' });
                 }
 
-                // If no rows were affected, return success without sending email
+            // If no rows were affected, return success without sending email
                 if (results.affectedRows === 0) {
                     return res.status(200).json({
                         data: results,
@@ -146,7 +167,8 @@ exports.acceptComplaints = async (req, res) => {
 
 exports.resolveComplaints = async (req, res) => {
     try {
-        const { tech_type, user_type, token_id, tech_id, bill_description, total_bill } = req.body;
+
+      const { tech_type, user_type, token_id, tech_id, bill_description, total_bill } = req.body;
         if (user_type === "technician") {
             let DEVICE_TABLE_NAME;
             let DEVICE_ID;
@@ -219,6 +241,8 @@ exports.resolveComplaints = async (req, res) => {
                     });
                 });
             });
+
+          
         }
     }
     catch (err) {
