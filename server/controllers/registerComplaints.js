@@ -7,8 +7,8 @@ exports.setup = (database) => {
 
 exports.registerComplaints = (req, res) => {
     try {
-        const { mis, device_id, description, user_type, complaint_type } = req.body;
-        if (!mis || !device_id || !description || !user_type) {
+        const { userID, device_id, description, user_type, complaint_type } = req.body;
+        if (!userID || !device_id || !description || !user_type) {
             return res.status(400).json({ error: 'Invalid complaint details' });
         }
 
@@ -64,7 +64,7 @@ exports.registerComplaints = (req, res) => {
 
                     // Insert the complaint into the database
                     const insertQuery = `INSERT INTO ${DEVICE_COMPLAINTS} (student_id, ${DEVICE_ID}, description, complaint_date, admin_approval) VALUES (?, ?, ?, ?, ?)`;
-                    const values = [mis, device_id, description, currentDate, false];
+                    const values = [userID, device_id, description, currentDate, false];
 
                     connection.query(insertQuery, values, (err, results) => {
                         if (err) {
@@ -118,4 +118,70 @@ exports.registerComplaintQR = async(req,res) =>{
         })
     }
 
+};
+
+
+exports.getStudentComplaints = async (req, res) => {
+    try {
+        const { student_id } = req.body;
+        console.log(req.body)
+        console.log(student_id);
+        const get_complaints_query = `
+        SELECT 
+        ac_id AS device_id,
+        CASE 
+            WHEN ac_complaints.resolved_date IS NULL THEN '--' 
+            WHEN ac_complaints.resolved_date = '1970-01-01 00:00:00' THEN '--'
+            ELSE ac_complaints.resolved_date 
+        END AS resolved_date,
+        ac_complaints.*
+    FROM ac_complaints 
+    WHERE ac_complaints.student_id = ${student_id}
+    UNION ALL
+    SELECT 
+        proj_id AS device_id,
+        CASE 
+            WHEN proj_complaints.resolved_date IS NULL THEN '--' 
+            WHEN proj_complaints.resolved_date = '1970-01-01 00:00:00' THEN '--'
+            ELSE proj_complaints.resolved_date 
+        END AS resolved_date,
+        proj_complaints.*
+    FROM proj_complaints
+    WHERE proj_complaints.student_id = ${student_id}
+    UNION ALL
+    SELECT 
+        comp_id AS device_id,
+        CASE 
+            WHEN comp_complaints.resolved_date IS NULL THEN '--' 
+            ELSE comp_complaints.resolved_date 
+        END AS resolved_date,
+        comp_complaints.*
+    FROM comp_complaints
+    WHERE comp_complaints.student_id = ${student_id};
+    ;
+    
+
+        
+`;
+
+        connection.query(get_complaints_query, [student_id], (err, results) => {
+            if (err) {
+                console.error('Error retrieving complaints: ' + err.stack);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
+
+            console.log('Retrieved complaints:', results); // Add logging here to see the results
+
+            return res.status(200).json({
+                data: results
+            });
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error',
+            message: err.message
+        });
+    }
 };

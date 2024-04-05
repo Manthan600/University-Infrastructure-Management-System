@@ -44,7 +44,6 @@ const connection = dbConnect();
 login.setup(connection);
 registerComplaints_db.setup(connection);
 technicians_db.setup(connection);
-devices_db.setup(connection);
 admin_db.setup(connection);
 accounts_db.setup(connection);
 
