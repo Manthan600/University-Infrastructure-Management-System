@@ -3,6 +3,7 @@ import Header from '../common/Header';
 import './Technician.css';
 import axios from 'axios'; // Import axios for making HTTP requests
 import { Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 export default function Technician() {
   const [ongoingComplaints, setOngoingComplaints] = useState([]);
@@ -14,15 +15,27 @@ export default function Technician() {
     getAllComplaints();
   }, []);
 
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    const isLoggedIn = sessionStorage.getItem('isLogin');
+    const user_type = sessionStorage.getItem('user_type');
+
+    if (!isLoggedIn || user_type!=='technician') {
+      navigate('/');
+    }
+  }, [navigate]);
+
+
   const getAllComplaints = async () => {
     try {
       const response = await axios.get('http://localhost:4000/api/v1/getAllComplaints');
       const { data } = response.data;
-      console.log({ data });
+      console.log("hi:",response);
       setOngoingComplaints(data.filter(complaint => !complaint.tech_id));
-      setAcceptedComplaints(data.filter(complaint => complaint.tech_id && complaint.resolved_date === '0000-00-00'));
+      setAcceptedComplaints(data.filter(complaint => complaint.tech_id && !complaint.resolved_date ));
       console.log(acceptedComplaints);
-      setResolvedComplaints(data.filter(complaint => complaint.tech_id && complaint.resolved_date !== '0000-00-00'));
+      setResolvedComplaints(data.filter(complaint => complaint.tech_id && complaint.resolved_date ));
     } catch (error) {
       console.error('Error fetching complaints:', error);
     }
@@ -44,7 +57,8 @@ export default function Technician() {
 
   const handleResolveComplaint = async (token_id) => {
     try {
-      const response = await axios.post('http://localhost:4000/api/v1/resolveComplaints', { token_id, tech_type: 'computer', user_type: 'technician' });
+      let tech_id = 110002;
+      const response = await axios.post('http://localhost:4000/api/v1/resolveComplaints', { tech_id,token_id, tech_type: 'computer', user_type: 'technician' });
       console.log('Complaint resolved:', response.data);
       setShowAlert(true);
       getAllComplaints();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link, useNavigate } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../common/Header';
@@ -22,6 +22,18 @@ export default function Faculty() {
   const [student, setStudent] = useState([]);
   const [tech, setTech] = useState([]);
 
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isLoggedIn = sessionStorage.getItem('isLogin');
+    const user_type = sessionStorage.getItem('user_type');
+
+    if (!isLoggedIn || user_type!=='admin') {
+      navigate('/');
+    }
+  }, [navigate]);
+
   useEffect(() => {
     getAllComplaintsAdmin();
   }, []);
@@ -42,9 +54,9 @@ export default function Faculty() {
       console.log({data});
       setUnverifiedComplaints(data.filter(complaint => !complaint.admin_approval));
       setnotAcceptedComplaints(data.filter(complaint => !complaint.tech_id && complaint.admin_approval===1));
-      setAcceptedComplaints(data.filter(complaint =>  complaint.tech_id && complaint.resolved_date === '0000-00-00' && complaint.admin_approval===1));
+      setAcceptedComplaints(data.filter(complaint =>  complaint.tech_id && !complaint.resolved_date && complaint.admin_approval===1));
       console.log(acceptedComplaints);
-      setResolvedComplaints(data.filter(complaint => complaint.tech_id && complaint.resolved_date !== '0000-00-00' && complaint.admin_approval===1));
+      setResolvedComplaints(data.filter(complaint => complaint.tech_id && complaint.resolved_date  && complaint.admin_approval===1));
     } catch (error) {
       console.error('Error fetching complaints:', error);
     }
@@ -188,7 +200,7 @@ export default function Faculty() {
           <div className="box">
             <div className="head">
               <h2>Complaint</h2>
-              <h3 >Fac-ID</h3>
+              <h3>{sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
             </div>
 
             <div className="complaint">
@@ -353,7 +365,7 @@ export default function Faculty() {
           <div className="box">
             <div className="head">
               <h2>Devices</h2>
-              <h4>Fac-ID</h4>
+              <h3>{sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
             </div>
 
             <div className="complaint">
@@ -517,7 +529,7 @@ export default function Faculty() {
         <div className="box">
           <div className="head">
             <h2>Staff</h2>
-            <h4>Fac-ID</h4>
+            <h3>{sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
           </div>
 
           <div className="complaint">
@@ -657,7 +669,7 @@ export default function Faculty() {
       <div className="box">
         <div className="head">
           <h2>Bills</h2>
-          <h4>Fac-ID</h4>
+          <h3>{sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
         </div>
 
         <div className="complaint">

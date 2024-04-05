@@ -1,9 +1,31 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import 'tailwindcss/tailwind.css'; // Import Tailwind CSS styles
+import './login.css'
+
+
+import { Container, Nav, Navbar } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInstitution } from "@fortawesome/free-solid-svg-icons";
+import { Link, useNavigate } from "react-router-dom";
+// import "./Header.css";
 
 const UserLogin = () => {
+
+  const [showImage, setShowImage] = useState(true);
+  const [hideImage, setHideImage] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+
+  const handleButtonClick = () => {
+    setHideImage(true); // Trigger fade-out animation
+    setTimeout(() => {
+      setShowImage(false); // Hide image after fade-out animation completes
+      setShowLogin(true); // Hide image after fade-out animation completes
+    }, 500); // Adjust this value to match the duration of your fade-out animation
+  };
+ 
+
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -15,7 +37,7 @@ const UserLogin = () => {
         { username, password }
       );
       console.log(response.data);
-      const mis = response.data.data[0].mis;
+      const userID = response.data.data[0].mis;
       const name = response.data.data[0].name;
 
       const user_type = response.data.user_type;
@@ -24,7 +46,7 @@ const UserLogin = () => {
       console.log("Login successful");
 
       // Save mis and name to sessionStorage
-      sessionStorage.setItem("mis", mis);
+      sessionStorage.setItem("userID", userID);
       sessionStorage.setItem("name", name);
       sessionStorage.setItem("user_type", user_type);
       sessionStorage.setItem("isLogin", true);
@@ -33,7 +55,7 @@ const UserLogin = () => {
 
       // Navigate to home if user_type is 'normal'
       if (user_type === "normal") {
-        navigate("/home");
+        navigate("/student");
       }
     } catch (error) {
       console.error("Login error:", error.response.data.error);
@@ -41,8 +63,21 @@ const UserLogin = () => {
     }
   };
 
+
+  
+
   return (
     <>
+
+{showImage && (
+        <div className={`image ${hideImage ? 'slide-up' : ''}`}>
+          <button className="button-29" role='button' onClick={handleButtonClick} >
+            Welcome!
+          </button>
+
+        </div>
+      )}
+{showLogin &&
       <div className="max-w-md mx-auto p-4 bg-blue-300 shadow-md rounded-md">
         <h2 className="text-4xl text-center font-bold mb-4 mt-10">
           User Login
@@ -88,7 +123,7 @@ const UserLogin = () => {
             </button>
           </div>
         </form>
-      </div>
+      </div>}
     </>
   );
 };
@@ -101,19 +136,19 @@ const TechnicianLogin = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/loginUser",
+        "http://localhost:4000/api/v1/loginTechnician",
         { username, password }
       );
       console.log(response.data);
-      const mis = response.data.data[0].mis;
+      const userID = response.data.data[0].tech_id;
       const name = response.data.data[0].name;
-      const user_type = response.data.user_type;
+      const user_type = 'technician';
      
       // Display login success message for 1 second
       console.log("Login successful");
 
       // Save mis, name, and user_type to sessionStorage
-      sessionStorage.setItem("mis", mis);
+      sessionStorage.setItem("userID", userID);
       sessionStorage.setItem("name", name);
       sessionStorage.setItem("user_type", user_type);
       sessionStorage.setItem("isLogin", true);
@@ -130,7 +165,7 @@ const TechnicianLogin = () => {
 
   return (
     <>
-      <div className="max-w-md mx-auto p-4 bg-blue-300 shadow-md rounded-md">
+      <div className="boxxx max-w-md my-auto mx-auto p-4 bg-blue-300 shadow-md rounded-md">
         <h2 className="text-4xl text-center font-bold mb-4 mt-10">
           Technician Login
         </h2>
@@ -191,19 +226,19 @@ const AccountSection = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/loginUser",
+        "http://localhost:4000/api/v1/loginAccountSection",
         { username, password }
       );
       console.log(response.data);
-      const mis = response.data.data[0].mis;
+      const userID = response.data.data[0].username;
       const name = response.data.data[0].name;
-      const user_type = response.data.user_type;
+      const user_type ='accounts';
      
       // Display login success message for 1 second
       console.log("Login successful");
 
       // Save mis, name, and user_type to sessionStorage
-      sessionStorage.setItem("mis", mis);
+      sessionStorage.setItem("userID", userID);
       sessionStorage.setItem("name", name);
       sessionStorage.setItem("user_type", user_type);
       sessionStorage.setItem("isLogin", true);
@@ -220,6 +255,7 @@ const AccountSection = () => {
 
   return (
     <>
+   
       <div className="max-w-md mx-auto p-4 bg-blue-300 shadow-md rounded-md">
         <h2 className="text-4xl text-center font-bold mb-4 mt-10">
           Account Section Login
@@ -280,19 +316,19 @@ const FacultyLogin = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/loginUser",
+        "http://localhost:4000/api/v1/loginAdmin",
         { username, password }
       );
       console.log(response.data);
-      const mis = response.data.data[0].mis;
+      const userID = response.data.data[0].username;
       const name = response.data.data[0].name;
-      const user_type = response.data.user_type;
+      const user_type = 'admin';
      
       // Display login success message for 1 second
       console.log("Login successful");
 
       // Save mis, name, and user_type to sessionStorage
-      sessionStorage.setItem("mis", mis);
+      sessionStorage.setItem("userID", userID);
       sessionStorage.setItem("name", name);
       sessionStorage.setItem("user_type", user_type);
       sessionStorage.setItem("isLogin", true);
@@ -366,10 +402,14 @@ const Login = () => {
   const [activeLink, setActiveLink] = useState("user");
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleLinkClick = (link) => {
     setActiveLink(link);
     setMenuOpen(false);
   };
+
+
 
   // Function to toggle menu open/close
   const toggleMenu = () => {
@@ -378,50 +418,46 @@ const Login = () => {
 
   return (
     <>
-      <nav className="bg-gray-800 p-5">
-        <div className="container mx-auto flex justify-between items-center text-1xl">
-          <div className="text-white font-bold">Our Logo UIMS</div>
-          <div className="flex space-x-4 items-center">
-            {/* Hamburger icon */}
+
+<div sticky="top">
+      {/* <Navbar style={{backgroundColor: '#ed8ffd'}}> */}
+      <Navbar className="navbar" data-bs-theme="dark" sticky="top">
+        <Container>
+          <FontAwesomeIcon
+            icon={faInstitution}
+            className="logo text-danger"
+            style={{ height: "25px", marginRight: "20px" }}
+          />
+          <Navbar.Brand>
+            {" "}
+            <Link className="navbar-brand" to={"/"}>
+              Uni-Infra-Management
+            </Link>
+          </Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link>
             <button
-              className="block sm:hidden text-white"
-              onClick={toggleMenu} // Toggle menu on click
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path d="M4 6h16M4 12h16m-7 6h7"></path>
-              </svg>
-            </button>
-
-            {/* for normal screens */}
-
-            <div className="hidden sm:block">
-              <button
                 onClick={() => handleLinkClick("user")}
-                className={`text-white ${
+                className={`link ${
                   activeLink === "user" && "underline"
                 } hover:text-pink-600 transition-all duration-300`}
               >
                 User
               </button>
-              <button
+            </Nav.Link>
+            <Nav.Link>
+            <button
                 onClick={() => handleLinkClick("technician")}
-                className={`text-white ml-5 ${
+                className={`link ml-5 ${
                   activeLink === "technician" && "underline"
                 } hover:text-pink-600 transition-all duration-300`}
               >
                 Technician
               </button>
-              <button
+            </Nav.Link>
+            <button
                 onClick={() => handleLinkClick("account")}
-                className={`text-white ml-5 ${
+                className={`link ml-5 ${
                   activeLink === "account" && "underline"
                 } hover:text-pink-600 transition-all duration-300`}
               >
@@ -429,17 +465,18 @@ const Login = () => {
               </button>
               <button
                 onClick={() => handleLinkClick("faculty")}
-                className={`text-white ml-5 ${
+                className={`link ml-5 ${
                   activeLink === "faculty" && "underline"
                 } hover:text-pink-600 transition-all duration-300`}
               >
                 Faculty
               </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+          </Nav>
 
+          </Container>
+      </Navbar>
+    </div>
+     
       {/* Responsive menu for small screens */}
       {menuOpen && (
         <div className="sm:hidden bg-gray-800 p-4">
@@ -478,7 +515,7 @@ const Login = () => {
         </div>
       )}
       {/* here based on selected user component is displayed */}
-      <div className="container mx-auto p-4 m-9">
+      <div className="container  m-0 p-0">
         {activeLink === "user" && <UserLogin />}
         {activeLink === "technician" && <TechnicianLogin />}
         {activeLink === "account" && <AccountSection />}
@@ -489,3 +526,4 @@ const Login = () => {
 };
 
 export default Login;
+
