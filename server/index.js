@@ -9,6 +9,7 @@ const accounts_db = require('./controllers/accountSectionDashboard');
 const loginUser = require("./routes/loginRoutes");
 const registerComplaints = require("./routes/registerComplintsRoutes");
 const technicians = require("./routes/technicianRoutes");
+const devices = require("./routes/devices");
 const admin = require("./routes/adminRoutes");
 const accountSection = require("./routes/accountsRoutes");
 
@@ -30,9 +31,10 @@ app.use("/api/v1",technicians);
 app.use("/api/v1",admin);
 app.use("/api/v1",accountSection);
 
+
 // start server
 
-app.listen(PORT, () =>{
+app.listen(PORT, () => {
     console.log(`Server started at port number ${PORT}`);
 })
 
@@ -46,7 +48,7 @@ admin_db.setup(connection);
 accounts_db.setup(connection);
 
 
-app.get("/", (req,res) => {
+app.get("/", (req, res) => {
     res.send("<h1> This is my yard </h1>")
 })
 

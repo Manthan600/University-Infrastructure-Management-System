@@ -1,8 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Header from '../common/Header'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Account() {
+  
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isLoggedIn = sessionStorage.getItem('isLogin');
+    const user_type = sessionStorage.getItem('user_type');
+
+    if (!isLoggedIn || user_type!=='accounts') {
+      navigate('/');
+    }
+  }, [navigate]);
+
   return (
     <div>
       <Header />
