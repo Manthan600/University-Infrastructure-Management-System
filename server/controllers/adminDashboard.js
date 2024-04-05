@@ -130,8 +130,9 @@ exports.approveComplaint = async (req, res) => {
                 console.log('Retrieved complaints:', results); // Add logging here to see the results
 
             });
-        }
+        })
 
+    }
     }
     catch (err) {
         console.error(err);
@@ -143,7 +144,6 @@ exports.approveComplaint = async (req, res) => {
         })
     }
 }
-
 
 exports.deleteComplaint = async (req, res) => {
     try {
@@ -370,6 +370,18 @@ exports.addDevice = async (req, res) => {
                 message: 'Only admins can access'
             })
         }
+    }
+    catch (err) {
+        console.error(err);
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error ',
+            message: err.message
+        })
+    }
+    
+}
 
 exports.getAllDevices = async (req, res) => {
     try {

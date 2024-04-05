@@ -10,10 +10,30 @@ export default function Student() {
   const [textareaHeight, setTextareaHeight] = useState(100); // Initial height of 50px
   const [selectedOption, setSelectedOption] = useState('complaint'); // Initial selected option
   const [showAlert, setShowAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [showErrorAlert409, setShowErrorAlert409] = useState(false);
   const [showErrorAlert404, setShowErrorAlert404] = useState(false);
   const [showErrorAlert500, setShowErrorAlert500] = useState(false);
   const [ShowErrorAlertOther, setShowErrorAlertOther] = useState(false);
+
+  const [studentComplaints, setStudentComplaints] = useState([]);
+
+  useEffect(() => {
+    getStudentComplaints();
+  }, []);
+
+
+  const getStudentComplaints = async () => {
+    try {
+      const response = await axios.post('http://localhost:4000/api/v1/getStudentComplaints', { student_id: sessionStorage.getItem('userID') });
+      console.log('Server response:', response.data);
+
+      setStudentComplaints(response.data.data);
+    } catch (error) {
+      console.error('Error fetching student complaints:', error);
+      setShowErrorAlert(true);
+    }
+  };
   const [formData, setFormData] = useState({
     mis: '',
     device_id: '',
@@ -28,9 +48,10 @@ export default function Student() {
 
   useEffect(() => {
     const isLoggedIn = sessionStorage.getItem('isLogin');
+    const user_type = sessionStorage.getItem('user_type');
 
-    if (!isLoggedIn) {
-      navigate('/login');
+    if (!isLoggedIn || user_type!=='normal') {
+      navigate('/');
     }
   }, [navigate]);
 
@@ -71,7 +92,7 @@ export default function Student() {
 
 
       setFormData({
-        mis: '',
+        userID: '',
         device_id: '',
         description: '',
         user_type: '',
@@ -172,7 +193,7 @@ export default function Student() {
           <div className="box">
             <div className="head">
               <h2>Make a complaint</h2>
-              <h3> {sessionStorage.getItem("mis")}: {sessionStorage.getItem("name")}</h3>
+              <h3> {sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
             </div>
 
 
@@ -181,7 +202,7 @@ export default function Student() {
               <form onSubmit={handleSubmit}>
                 <div>
                   <label>MIS:</label>
-                  <input className='inp' style={{ border: '0' }} type="text" name="mis" value={formData.mis = sessionStorage.getItem('mis')} onChange={handleChange} />
+                  <input className='inp' style={{ border: '0' }} type="text" name="mis" value={formData.userID = sessionStorage.getItem('userID')} onChange={handleChange} />
                 </div>
                 <div>
                   <label>Device ID:</label>
@@ -240,7 +261,7 @@ export default function Student() {
           <div className="box">
             <div className="head">
               <h2>Check Status</h2>
-              <h4>MIS : Name/Username</h4>
+              <h3>{sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
             </div>
             <table class="table table-bordered mb-5" >
               <thead >
@@ -256,18 +277,18 @@ export default function Student() {
                 </tr>
               </thead>
               <tbody>
-
-                <tr>
-                  <td>1</td>
-                  <td>12345</td>
-                  <td>dev1</td>
-                  <td>complaint</td>
-                  <td>1/1/2024</td>
-                  <td>-</td>
-                  <td>Tech1</td>
-
-                </tr>
-              </tbody>
+              {studentComplaints.map(complaint => (
+              <tr key={complaint.token_id}>
+                <td>{complaint.token_id}</td>
+                <td>{complaint.student_id}</td>
+                <td>{complaint.device_id}</td>
+                <td>{complaint.description}</td>
+                <td>{new Date(complaint.complaint_date).toISOString().split('T')[0]}</td>
+<td>{complaint.resolved_date ? new Date(complaint.resolved_date).toISOString().split('T')[0] : '--'}</td>
+<td>{complaint.tech_id ? complaint.tech_id : '--'}</td>
+              </tr>
+            ))}
+            </tbody>
             </table>
           </div>
 

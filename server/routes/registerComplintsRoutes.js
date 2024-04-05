@@ -3,10 +3,11 @@ const express = require('express');
 const router = express.Router();
 
 
-const {registerComplaints,registerComplaintQR} = require("../controllers/registerComplaints");
+const {registerComplaints,registerComplaintQR,getStudentComplaints} = require("../controllers/registerComplaints");
 
 
 router.post('/registerComplaints',registerComplaints);
+router.post('/getStudentComplaints',getStudentComplaints);
 router.get('/registerComplaintQR',registerComplaintQR);
 
 
