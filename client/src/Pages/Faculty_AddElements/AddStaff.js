@@ -8,6 +8,8 @@ export default function AddStaff() {
   const [userType, setUserType] = useState('student'); // Default to student
 
   const [showAlert, setShowAlert] = useState(false);
+  const [showAlertErr, setShowAlertErr] = useState(false);
+  const [showAlertErr2, setShowAlertErr2] = useState(false);
 
   const [formData, setFormData] = useState({
     userType: '',
@@ -119,7 +121,8 @@ export default function AddStaff() {
       // Make the API call to add the staff member
       const response = await axios.post('http://localhost:4000/api/v1/addStaff', formDataToSend);
       console.log(response.data);
-      alert('Staff member added successfully');
+      setShowAlert(true)
+      // alert('Staff member added successfully');
   
       // Reset form data to empty
       setFormData({
@@ -145,10 +148,12 @@ export default function AddStaff() {
       }, 3000);
     } catch (error) {
       if (error.response.status == 400) {
-        alert('Already present');
+        setShowAlertErr(true)
+        // alert('Already present');
       } else {
         console.error('Error adding staff:', error);
-        alert('Failed to add staff member');
+        // alert('Failed to add staff member');
+        setShowAlertErr2(true)
       }
     }
   };
@@ -290,8 +295,41 @@ export default function AddStaff() {
         </div>
       </div>
 
-      <Alert show={showAlert} variant="success" style={{ position: 'absolute', top: '400px', height: '60px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999' }}>
+      <Alert show={showAlert} variant="success" 
+       style={{
+        position: 'fixed', // Change to fixed
+        bottom: '550px',    // Adjust bottom distance as needed
+        height: '60px', 
+        left: '50%', 
+        transform: 'translateX(-50%)', 
+        zIndex: '9999' 
+      }}
+    >
         Successfully Registered ✔
+      </Alert>
+      <Alert show={showAlertErr} variant="danger" 
+       style={{
+        position: 'fixed', // Change to fixed
+        bottom: '550px',    // Adjust bottom distance as needed
+        height: '60px', 
+        left: '50%', 
+        transform: 'translateX(-50%)', 
+        zIndex: '9999' 
+      }}
+    >
+        Already present
+      </Alert>
+      <Alert show={showAlertErr2} variant="danger" 
+       style={{
+        position: 'fixed', // Change to fixed
+        bottom: '550px',    // Adjust bottom distance as needed
+        height: '60px', 
+        left: '50%', 
+        transform: 'translateX(-50%)', 
+        zIndex: '9999' 
+      }}
+    >
+        Failed To Add
       </Alert>
     </div>
   );

@@ -36,7 +36,7 @@ const UserLogin = () => {
         "http://localhost:4000/api/v1/loginUser",
         { username, password }
       );
-      console.log(response.data);
+      // console.log(response.data);
       const userID = response.data.data[0].mis;
       const name = response.data.data[0].name;
 
@@ -139,7 +139,7 @@ const TechnicianLogin = () => {
         "http://localhost:4000/api/v1/loginTechnician",
         { username, password }
       );
-      console.log(response.data);
+      // console.log(response.data);
       const userID = response.data.data[0].tech_id;
       const name = response.data.data[0].name;
       const user_type = 'technician';
@@ -229,7 +229,7 @@ const AccountSection = () => {
         "http://localhost:4000/api/v1/loginAccountSection",
         { username, password }
       );
-      console.log(response.data);
+     // console.log(response.data);
       const userID = response.data.data[0].username;
       const name = response.data.data[0].name;
       const user_type ='accounts';
@@ -319,7 +319,7 @@ const FacultyLogin = () => {
         "http://localhost:4000/api/v1/loginAdmin",
         { username, password }
       );
-      console.log(response.data);
+     // console.log(response.data);
       const userID = response.data.data[0].username;
       const name = response.data.data[0].name;
       const user_type = 'admin';

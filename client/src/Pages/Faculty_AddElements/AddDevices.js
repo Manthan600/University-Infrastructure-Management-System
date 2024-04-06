@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AddDevice.css'
 import { Link } from 'react-router-dom';
+import { Alert } from 'react-bootstrap';
 
 const DeviceForm = ({ isUpdate }) => {
   const [formData, setFormData] = useState({
@@ -17,7 +18,11 @@ const DeviceForm = ({ isUpdate }) => {
   });
   const [availableModels, setAvailableModels] = useState([]);
   const [availableRooms, setAvailableRooms] = useState([]);
-  const [isUpdating, setIsUpdating] = useState(isUpdate);
+
+  
+  const [showAlert, setShowAlert] = useState(false);
+  const [showAlertErr, setShowAlertErr] = useState(false);
+  const [showAlertErr2, setShowAlertErr2] = useState(false);
 
   useEffect(() => {
     fetchAvailableModels();
@@ -83,12 +88,19 @@ const DeviceForm = ({ isUpdate }) => {
           status: 'Working'
         }
       });
-      alert('Device(s) added successfully');
-    } catch (error) {
-      console.error('Error adding device:', error);
-      alert('Failed to add device');
+      setShowAlert(true)
+    }  catch (error) {
+      if (error.response.status == 400) {
+        setShowAlertErr(true)
+        // alert('Already present');
+      } else {
+        console.error('Error adding Device:', error);
+        // alert('Failed to add staff member');
+        setShowAlertErr2(true)
+      }
     }
   };
+  
 
 
 
@@ -172,6 +184,43 @@ const DeviceForm = ({ isUpdate }) => {
             </button>          </div>
         </div>
       </form>
+      
+      <Alert show={showAlert} variant="success" 
+       style={{
+        position: 'fixed', // Change to fixed
+        bottom: '550px',    // Adjust bottom distance as needed
+        height: '60px', 
+        left: '50%', 
+        transform: 'translateX(-50%)', 
+        zIndex: '9999' 
+      }}
+    >
+        Successfully Registered ✔
+      </Alert>
+      <Alert show={showAlertErr} variant="danger" 
+       style={{
+        position: 'fixed', // Change to fixed
+        bottom: '550px',    // Adjust bottom distance as needed
+        height: '60px', 
+        left: '50%', 
+        transform: 'translateX(-50%)', 
+        zIndex: '9999' 
+      }}
+    >
+        Already present
+      </Alert>
+      <Alert show={showAlertErr2} variant="danger" 
+       style={{
+        position: 'fixed', // Change to fixed
+        bottom: '550px',    // Adjust bottom distance as needed
+        height: '60px', 
+        left: '50%', 
+        transform: 'translateX(-50%)', 
+        zIndex: '9999' 
+      }}
+    >
+        Failed To Add
+      </Alert>
     </div>
   );
 };
