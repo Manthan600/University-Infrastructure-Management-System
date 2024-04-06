@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import 'tailwindcss/tailwind.css'; // Import Tailwind CSS styles
 import './login.css'
-
+import AboutUs from "./AboutUs";
 
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -52,7 +52,7 @@ const UserLogin = () => {
       sessionStorage.setItem("isLogin", true);
 
 
-
+        
       // Navigate to home if user_type is 'normal'
       if (user_type === "normal") {
         navigate("/student");
@@ -470,6 +470,14 @@ const Login = () => {
                 } hover:text-pink-600 transition-all duration-300`}
               >
                 Faculty
+              </button>
+              <button
+                onClick={() => navigate('/about')}
+                className={`link ml-5 ${
+                  activeLink === "faculty" && "underline"
+                } hover:text-pink-600 transition-all duration-300`}
+              >
+                AboutUs
               </button>
           </Nav>
 

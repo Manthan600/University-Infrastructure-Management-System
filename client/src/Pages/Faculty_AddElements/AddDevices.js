@@ -1,83 +1,179 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './AddDevice.css';
+import './AddDevice.css'
+import { Link } from 'react-router-dom';
 
-export default function AddDevice() {
-  const [deviceData, setDeviceData] = useState({
-    device_type: 'computer',
-    model_id: '',
-    Room_id: '',
-    Company: '',
-    DOI: '',
-    status: '',
-    dept_id: 3 // Default to computer department
+const DeviceForm = ({ isUpdate }) => {
+  const [formData, setFormData] = useState({
+    no_of_devices: '',
+    device_type: '',
+    device_info: {
+      model_id: '',
+      Room_id: '',
+      Company: '',
+      DOI: '',
+      status: 'Working' // Default value for status
+    }
   });
+  const [availableModels, setAvailableModels] = useState([]);
+  const [availableRooms, setAvailableRooms] = useState([]);
+  const [isUpdating, setIsUpdating] = useState(isUpdate);
+
+  useEffect(() => {
+    fetchAvailableModels();
+    fetchAvailableRooms();
+  }, []);
+
+  const fetchAvailableModels = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/api/v1/models');
+      setAvailableModels(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching available models:', error);
+    }
+  };
+
+  const fetchAvailableRooms = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/api/v1/rooms');
+      setAvailableRooms(response.data);
+      console.log(response.data);
+
+
+
+
+    } catch (error) {
+      console.error('Error fetching available rooms:', error);
+    }
+  };
 
   const handleChange = (e) => {
-    setDeviceData({ ...deviceData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === 'no_of_devices' || name === 'device_type') {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        device_info: {
+          ...prevState.device_info,
+          [name]: value
+        }
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:4000/api/v1/addDevice', deviceData);
-      alert('Device added successfully');
-      // Clear form fields or redirect to another page
+      const res = await axios.post('http://localhost:4000/api/v1/addDevice', formData);
+      console.log(res.data);
+      // Reset form after successful submission
+      setFormData({
+        no_of_devices: '',
+        device_type: '',
+        device_info: {
+          model_id: '',
+          Room_id: '',
+          Company: '',
+          DOI: '',
+          status: 'Working'
+        }
+      });
+      alert('Device(s) added successfully');
     } catch (error) {
       console.error('Error adding device:', error);
       alert('Failed to add device');
     }
   };
 
+
+
   return (
-    <div className="container1">
+    <div>
       <h2>Add Device</h2>
-      <form className="add-device-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="device_type">Device Type:</label>
-          <select name="device_type" id="device_type" value={deviceData.device_type} onChange={handleChange} required>
-            <option value="computer">Computer</option>
-            <option value="ac">AC</option>
-            <option value="projector">Projector</option>
-          </select>
+      <h2>Welcome Faculty/Admin!</h2>
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <Link to='/faculty' className='btn btn-primary'>Back</Link>
+      </div>
+      <form onSubmit={handleSubmit}>
+        <div className="box">
+        <div className="head">
+          <h2>ADD DEVICE</h2>
+          <h3>{sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
         </div>
-        <div className="form-group">
-          <label htmlFor="model_id">Model ID:</label>
-          <input type="text" name="model_id" id="model_id" value={deviceData.model_id} onChange={handleChange} required />
+          <div className="complaint">
+            <div>
+              <label htmlFor="no_of_devices">Number of Devices:</label>
+              <input className='inp' type="number" name="no_of_devices" value={formData.no_of_devices} onChange={handleChange} required />
+            </div>
+            <div>
+              <label htmlFor="device_type">Device Type:</label>
+              <select name="device_type" value={formData.device_type} onChange={handleChange} required>
+                <option value="">Select Device Type</option>
+                <option value="computer">Computer</option>
+                <option value="projector">Projector</option>
+                <option value="ac">AC</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="model_id">Model ID:</label>
+              <select name="model_id" value={formData.device_info.model_id} onChange={handleChange} required>
+                <option value="">Select Model ID</option>
+                {[...Array(5)].map((_, index) => (
+                  <option key={index + 1} value={index + 1}>{index + 1}</option>
+                ))}
+              </select>
+
+            </div>
+            <div>
+
+              <div>
+                <div>
+                  <label htmlFor="Room_id">Room ID:</label>
+                  <select name="Room_id" value={formData.device_info.Room_id} onChange={handleChange} required>
+                    <option value="">Select Room ID</option>
+                    {availableRooms && Object.keys(availableRooms).flatMap(key => (
+                      availableRooms[key].map(room => (
+                        <option key={room.Room_id} value={room.Room_id}>{room.Room_id}</option>
+                      ))
+                    ))}
+                  </select>
+                </div>
+
+
+              </div>
+
+
+            </div>
+            <div>
+              <label htmlFor="Company">Company:</label>
+              <input className='inp' type="text" name="Company" value={formData.device_info.Company} onChange={handleChange} required />
+            </div>
+            <div>
+              <label htmlFor="DOI">Date of Installation (DOI):</label>
+              <input className='inp' type="date" name="DOI" value={formData.device_info.DOI} onChange={handleChange} required />
+            </div>
+            <div>
+              <label htmlFor="status">Status:</label>
+              <input className='inp' type="text" name="status" value={formData.device_info.status} readOnly />
+            </div>
+            <button
+              className="button-82-pushable"
+              role="button"
+              type="submit"
+            >
+              <span className="button-82-shadow"></span>
+              <span className="button-82-edge"></span>
+              <span className="button-82-front text">Submit</span>
+            </button>          </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="Room_id">Room ID:</label>
-          <input type="text" name="Room_id" id="Room_id" value={deviceData.Room_id} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label htmlFor="Company">Company:</label>
-          <input type="text" name="Company" id="Company" value={deviceData.Company} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label htmlFor="DOI">DOI:</label>
-          <input type="date" name="DOI" id="DOI" value={deviceData.DOI} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label htmlFor="status">Status:</label>
-          <select name="status" id="status" value={deviceData.status} onChange={handleChange} required>
-            <option value="">Select Status</option>
-            <option value="Working">Working</option>
-            <option value="Not Working">Not Working</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="dept_id">Department:</label>
-          <select name="dept_id" id="dept_id" value={deviceData.dept_id} onChange={handleChange} required>
-            <option value="">Select Department</option>
-            <option value="1">Electrical</option>
-            <option value="2">Mechanical</option>
-            <option value="3">Computer</option>
-            <option value="4">Civil</option>
-            <option value="5">Chemical</option>
-          </select>
-        </div>
-        <button type="submit" className="btn-submit">Add Device</button>
       </form>
     </div>
   );
-}
+};
+
+export default DeviceForm;

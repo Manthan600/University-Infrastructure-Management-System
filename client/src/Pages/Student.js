@@ -179,7 +179,7 @@ export default function Student() {
           name="option"
           value="status"
           checked={selectedOption === 'status'}
-          onChange={handleOptionChange}
+          onChange={handleOptionChange && getStudentComplaints(sessionStorage.getItem('userID') )}
           className="option-button"
         />
         <label className='subpages' htmlFor="status">Check Status</label>

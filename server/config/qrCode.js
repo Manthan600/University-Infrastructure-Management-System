@@ -8,7 +8,7 @@ async function generateQRCode(data, filename) {
         qr.toFile(filename,data,function(err){
             if (err) return console.log(err);
             else{
-                console.log("qe code generated");
+                console.log("QR code generated");
             }
         } )
     } catch (err) {

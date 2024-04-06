@@ -318,10 +318,80 @@ exports.addACModel = async (req, res) => {
 
 
 
+// exports.addDevice = async (req, res) => {
+//     try {
+//         const { no_of_devices, device_type, user_type, device_info } = req.body;
+//         const data =  { no_of_devices, device_type, user_type, device_info } ;
+//         if (user_type == "admin" || "normal " || "technician"  || "") {
+//             let DEVICE_TABLE_NAME;
+//             let DEVICE_ID;
+//             let DEVICE_COMPLAINTS;
+//             let DEVICE_MODELS;
+
+//             if (device_type === "computer") {
+//                 DEVICE_TABLE_NAME = "computer";
+//                 DEVICE_ID = "comp_id";
+//                 DEVICE_COMPLAINTS = "comp_complaints";
+//                 DEVICE_MODELS = "comp_model";
+//             }
+//             else if (device_type === "ac") {
+//                 DEVICE_TABLE_NAME = "ac";
+//                 DEVICE_ID = "ac_id";
+//                 DEVICE_COMPLAINTS = "ac_complaints";
+//                 DEVICE_MODELS = "ac_model";
+//             }
+//             else if (device_type === "projector") {
+//                 DEVICE_TABLE_NAME = "projector";
+//                 DEVICE_ID = "proj_id";
+//                 DEVICE_COMPLAINTS = "proj_complaints";
+//                 DEVICE_MODELS = "proj_model";
+//             }
+
+//             const insertDeviceQuery = `INSERT INTO ${DEVICE_TABLE_NAME} ( model_id, Room_id, Company, DOI, status) VALUES ( ?, ?, ?, ?, ?)`;
+//             for (i = 0; i < no_of_devices; i++) {
+//                 connection.query(insertDeviceQuery, [device_info.model_id, device_info.Room_id, device_info.Company, device_info.DOI, device_info.status], (err, insertDeviceResults) => {
+//                     if (err) {
+//                         console.error('Error inserting complaint: ' + err.stack);
+//                         console.log(err.message);
+//                         return res.status(500).json({ error: 'Internal server error' });
+//                     }
+//                     const url = `http://localhost:4000/api/v1/registerComplaintQR?device_id=${insertDeviceResults.insertId}&device_type=${device_type}`
+//                     const filename = `./qrcodes/${device_type}${insertDeviceResults.insertId}.png`;
+//                     generateQRCode(url, filename);
+                    
+//                 });
+//             }
+//             return res.status(200).json({
+//                 message: "Products added successfully",
+//                 data : data
+//             })
+//         }
+//         else {
+//             console.log("only admis can access")
+//             res.status(401).json({
+//                 message: 'Only admins can access'
+//             })
+//         }
+//     }
+//     catch (err) {
+//         console.error(err);
+//         console.log(err);
+//         res.status(500).json({
+//             success: false,
+//             data: 'Internal server error ',
+//             message: err.message
+//         })
+//     }
+    
+// }
+
+
 exports.addDevice = async (req, res) => {
     try {
         const { no_of_devices, device_type, user_type, device_info } = req.body;
-        if (user_type == "admin") {
+        const data =  { no_of_devices, device_type, user_type, device_info };
+        let user = 'admin'
+        if (user=== "admin") {
             let DEVICE_TABLE_NAME;
             let DEVICE_ID;
             let DEVICE_COMPLAINTS;
@@ -346,42 +416,53 @@ exports.addDevice = async (req, res) => {
                 DEVICE_MODELS = "proj_model";
             }
 
-            const insertDeviceQuery = `INSERT INTO ${DEVICE_TABLE_NAME} ( model_id, Room_id, Company, DOI, status) VALUES ( ?, ?, ?, ?, ?)`;
-            for (i = 0; i < no_of_devices; i++) {
-                connection.query(insertDeviceQuery, [device_info.model_id, device_info.Room_id, device_info.Company, device_info.DOI, device_info.status], (err, insertDeviceResults) => {
-                    if (err) {
-                        console.error('Error inserting complaint: ' + err.stack);
-                        console.log(err.message);
+            const insertDeviceQuery = `INSERT INTO ${DEVICE_TABLE_NAME} (model_id, Room_id, Company, DOI, status) VALUES (?, ?, ?, ?, ?)`;
+            
+            // Start transaction
+            connection.beginTransaction(async (err) => {
+                if (err) throw err;
+                
+                for (let i = 0; i < no_of_devices; i++) {
+                    try {
+                        const insertResult = await connection.query(insertDeviceQuery, [device_info.model_id, device_info.Room_id, device_info.Company, device_info.DOI, device_info.status]);
+                        console.log('Device inserted successfully:', device_info);
+                        
+                        // Generate QR code for each device
+                        const url = `http://localhost:4000/api/v1/registerComplaintQR?device_id=${insertResult.insertId}&device_type=${device_type}`;
+                        const filename = `./qrcodes/${device_type}${insertResult.insertId}.png`;
+                        generateQRCode(url, filename);
+                    } catch (insertError) {
+                        console.error('Error inserting device:', insertError);
+                        // Rollback transaction on error
+                        connection.rollback(() => {
+                            console.log('Transaction rolled back.');
+                        });
                         return res.status(500).json({ error: 'Internal server error' });
                     }
-                    const url = `http://localhost:4000/api/v1/registerComplaintQR?device_id=${insertDeviceResults.insertId}&device_type=${device_type}`
-                    const filename = `./qrcodes/${device_type}${insertDeviceResults.insertId}.png`;
-                    generateQRCode(url, filename);
-                    
+                }
+                
+                // Commit transaction if all devices inserted successfully
+                connection.commit((commitError) => {
+                    if (commitError) {
+                        console.error('Error committing transaction:', commitError);
+                        return res.status(500).json({ error: 'Internal server error' });
+                    }
+                    console.log('Transaction committed.');
+                    return res.status(200).json({ message: 'Products added successfully' });
                 });
-            }
-            return res.status(200).json({
-                message: "Products added successfully",
-            })
+            });
         }
         else {
-            console.log("only admis can access")
-            res.status(401).json({
-                message: 'Only admins can access'
-            })
+            console.log("Only admins can access");
+            res.status(401).json({ message: 'Only admins can access' });
         }
     }
     catch (err) {
         console.error(err);
-        console.log(err);
-        res.status(500).json({
-            success: false,
-            data: 'Internal server error ',
-            message: err.message
-        })
+        res.status(500).json({ success: false, data: 'Internal server error', message: err.message });
     }
-    
-}
+};
+
 
 exports.getAllDevices = async (req, res) => {
     try {
@@ -450,6 +531,92 @@ exports.getAllDevices = async (req, res) => {
                 }
 
                 console.log('Retrieved All devices:', results); // Add logging here to see the results
+
+                return res.status(200).json({
+                    data: results
+                });
+            });
+        } else {
+            return res.status(403).json({ error: 'Forbidden', message: 'You do not have permission to perform this action.' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error',
+            message: err.message
+        });
+    }
+};
+
+
+exports.rooms = async (req, res) => {
+    try {
+        // const {  device_type, user_type } = req.body;
+        user_type = "admin";
+        // device_type='computer'
+
+        if (user_type === "admin") {
+           
+            const get_rooms_query = `
+            SELECT * FROM rooms;
+            `;
+
+            connection.query(get_rooms_query, (err, results) => {
+                if (err) {
+                    console.error('Error retrieving rooms: ' + err.stack);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+
+                console.log('Retrieved All rooms:', results); // Add logging here to see the results
+
+                return res.status(200).json({
+                    data: results
+                });
+            });
+        } else {
+            return res.status(403).json({ error: 'Forbidden', message: 'You do not have permission to perform this action.' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error',
+            message: err.message
+        });
+    }
+};
+
+
+exports.models = async (req, res) => {
+    try {
+        const { device_type, user_type } = req.body;
+        // For testing, user_type hardcoded to "admin"
+        user_type = "admin";
+        
+        if (user_type === "admin") {
+            let modelName;
+            if (device_type === "computer") {
+                modelName = "comp_models";
+            } else if (device_type === "ac") {
+                modelName = "ac_models";
+            } else if (device_type === "projector") {
+                modelName = "proj_models";
+            } else {
+                return res.status(400).json({ error: 'Bad Request', message: 'Invalid device type' });
+            }
+           
+            const get_models_query = `
+                SELECT * FROM ${modelName};
+            `;
+
+            connection.query(get_models_query, (err, results) => {
+                if (err) {
+                    console.error('Error retrieving models: ' + err.stack);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+
+                console.log('Retrieved models:', results); // Add logging here to see the results
 
                 return res.status(200).json({
                     data: results
@@ -612,6 +779,162 @@ exports.getAllBillsAdmin = async (req, res) => {
                 success: false,
                 data: 'Unauthorized access',
             });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error',
+            message: err.message
+        });
+    }
+};
+
+
+exports.addStaff = async (req, res) => {
+    try {
+        const { userType, data } = req.body;
+        let user = "admin";
+
+        if (user === "admin") {
+            let tableName, insertQuery, values;
+
+            // Handle different user types here
+            switch (userType) {
+                case 'student':
+                    tableName = 'students';
+                    // Query to check if MIS already exists in the database
+                    const checkQuery = 'SELECT COUNT(*) AS count FROM students WHERE MIS = ?';
+                    connection.query(checkQuery, [data.MIS], (err, result) => {
+                        if (err) {
+                            console.error('Error checking MIS:', err);
+                            return res.status(500).json({ error: 'Internal server error' });
+                        }
+                        const count = result[0].count;
+
+                        if (count > 0) {
+                            // MIS already exists in the database
+                            console.log("MIS already registered");
+                            return res.status(400).json({ error: 'Bad Request', message: 'MIS already registered' });
+                        } else {
+                            // MIS is unique, proceed with inserting the new student record
+                            insertQuery = 'INSERT INTO students (MIS, password, name, branch, contact_no) VALUES (?, ?, ?, ?, ?)';
+                            values = [data.MIS, data.password, data.name, data.branch, data.contact_no];
+                            
+                            // Execute the insert query
+                            connection.query(insertQuery, values, (err, result) => {
+                                if (err) {
+                                    console.error('Error adding student:', err);
+                                    return res.status(500).json({ error: 'Internal server error' });
+                                }
+                                console.log('Student added successfully');
+                                return res.status(200).json({ message: 'Student added successfully' });
+                            });
+                        }
+                    });
+                    break;
+                case 'technician':
+                    tableName = 'technicians';
+                    // Query to check if technician ID already exists in the database
+                    const checkQueryTech = 'SELECT COUNT(*) AS count FROM technicians WHERE tech_id = ?';
+                    connection.query(checkQueryTech, [data.tech_id], (err, result) => {
+                        if (err) {
+                            console.error('Error checking technician ID:', err);
+                            return res.status(500).json({ error: 'Internal server error' });
+                        }
+                        const count = result[0].count;
+
+                        if (count > 0) {
+                            // Technician ID already exists in the database
+                            console.log("Technician ID already registered");
+                            return res.status(400).json({ error: 'Bad Request', message: 'Technician ID already registered' });
+                        } else {
+                            // Technician ID is unique, proceed with inserting the new technician record
+                            insertQuery = 'INSERT INTO technicians (tech_id, password, name, contact_no, address, city, zip, field , email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                            values = [data.tech_id, data.password, data.name, data.contact_no, data.address, data.city, data.zip, data.field , data.email];
+                            
+                            // Execute the insert query
+                            connection.query(insertQuery, values, (err, result) => {
+                                if (err) {
+                                    console.error('Error adding technician:', err);
+                                    return res.status(500).json({ error: 'Internal server error' });
+                                }
+                                console.log('Technician added successfully');
+                                return res.status(200).json({ message: 'Technician added successfully' });
+                            });
+                        }
+                    });
+                    break;
+                case 'admin':
+                    tableName = 'admin';
+                    // Query to check if username already exists in the database
+                    const checkQueryAdmin = 'SELECT COUNT(*) AS count FROM admin WHERE username = ?';
+                    connection.query(checkQueryAdmin, [data.username], (err, result) => {
+                        if (err) {
+                            console.error('Error checking username:', err);
+                            return res.status(500).json({ error: 'Internal server error' });
+                        }
+                        const count = result[0].count;
+
+                        if (count > 0) {
+                            // Username already exists in the database
+                            console.log("Username already registered");
+                            return res.status(400).json({ error: 'Bad Request', message: 'Username already registered' });
+                        } else {
+                            // Username is unique, proceed with inserting the new admin record
+                            insertQuery = 'INSERT INTO admin (name, username, password) VALUES (?, ?, ?)';
+                            values = [data.name, data.username, data.password];
+                            
+                            // Execute the insert query
+                            connection.query(insertQuery, values, (err, result) => {
+                                if (err) {
+                                    console.error('Error adding admin:', err);
+                                    return res.status(500).json({ error: 'Internal server error' });
+                                }
+                                console.log('Admin added successfully');
+                                return res.status(200).json({ message: 'Admin added successfully' });
+                            });
+                        }
+                    });
+                    break;
+                
+                case 'account_section':
+                    tableName = 'account_section';
+                    // Query to check if username already exists in the database
+                    const checkQueryAcc = 'SELECT COUNT(*) AS count FROM account_section WHERE username = ?';
+                    connection.query(checkQueryAcc, [data.username], (err, result) => {
+                        if (err) {
+                            console.error('Error checking username:', err);
+                            return res.status(500).json({ error: 'Internal server error' });
+                        }
+                        const count = result[0].count;
+
+                        if (count > 0) {
+                            // Username already exists in the database
+                            console.log("Username already registered");
+                            return res.status(400).json({ error: 'Bad Request', message: 'Username already registered' });
+                        } else {
+                            // Username is unique, proceed with inserting the new admin record
+                            insertQuery = 'INSERT INTO account_section (name, username, password) VALUES (?, ?, ?)';
+                            values = [data.name, data.username, data.password];
+                            
+                            // Execute the insert query
+                            connection.query(insertQuery, values, (err, result) => {
+                                if (err) {
+                                    console.error('Error adding Account Section:', err);
+                                    return res.status(500).json({ error: 'Internal server error' });
+                                }
+                                console.log('Account Section added successfully');
+                                return res.status(200).json({ message: 'Admin added successfully' });
+                            });
+                        }
+                    });
+                    break;
+                default:
+                    return res.status(400).json({ error: 'Bad Request', message: 'Invalid user type' });
+            }
+        } else {
+            return res.status(403).json({ error: 'Forbidden', message: 'You do not have permission to perform this action.' });
         }
     } catch (err) {
         console.error(err);
