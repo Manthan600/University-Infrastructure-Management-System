@@ -39,8 +39,12 @@ export default function Faculty() {
   }, [navigate]);
 
   useEffect(() => {
-    getAllComplaintsAdmin();
-  }, []);
+    getAllComplaintsAdmin(selectedDeviceType);
+  }, [selectedDeviceType]);
+
+  // useEffect(() => {
+  //   getAllComplaintsAdmin();
+  // }, []);
 
   useEffect(() => {
     getAllDevices();
@@ -95,7 +99,7 @@ export default function Faculty() {
       );
       console.log("Complaint Approved:", response.data);
       setShowAlert(true);
-      getAllComplaintsAdmin();
+      getAllComplaintsAdmin(selectedDeviceType);
       setTimeout(() => {
         setShowAlert(false);
       }, 4000);
@@ -112,12 +116,32 @@ export default function Faculty() {
       );
       console.log("Complaint Deleted:", response.data);
       setShowAlert(true);
-      getAllComplaintsAdmin();
+      getAllComplaintsAdmin(selectedDeviceType);
       setTimeout(() => {
         setShowAlert(false);
       }, 4000);
     } catch (error) {
       console.error("Error accepting complaint:", error);
+    }
+  };
+
+  const deleteAc = async (device_id) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/deleteAc",
+        {
+          device_id: device_id,
+          device_type: "ac",
+          user_type: sessionStorage.getItem("user_type"),
+        }
+      );
+      getAllDevices();
+      setShowAlertDel(true);
+      setTimeout(() => {
+        setShowAlertDel(false);
+      }, 4000);
+    } catch (error) {
+      console.error("Error deleting Device:", error);
     }
   };
 
@@ -240,8 +264,8 @@ export default function Faculty() {
           <h2 class="gradient-text_b">Welcome Faculty/Admin!</h2>
           <div className="box">
             <div className="head">
-              <h2 class="gradient-text_b">Complaint</h2>
-              <h3 class="gradient-text_r">
+              <h2>Complaint</h2>
+              <h3>
                 {sessionStorage.getItem("userID")}:{" "}
                 {sessionStorage.getItem("name")}
               </h3>
@@ -249,215 +273,201 @@ export default function Faculty() {
 
             <div className="complaint">
               <form action="">
-                <label htmlFor="" className="text-black">
-                  Verify Complaints :
-                </label>
-                <div className="table-responsive">
-                  <table className="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Token ID</th>
-                        <th>Student ID</th>
-                        <th>Device ID</th>
-                        <th>Description</th>
-                        <th>Complaint Date</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {unverifiedComplaints.map((complaint) => (
-                        <tr key={complaint.token_id}>
-                          <td>{complaint.token_id}</td>
-                          <td>{complaint.student_id}</td>
-                          {/* <td>
+                <label htmlFor="">Verify Complaints :</label>
+                <table className="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Token ID</th>
+                      <th>Student ID</th>
+                      <th>Device ID</th>
+                      <th>Description</th>
+                      <th>Complaint Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {unverifiedComplaints.map((complaint) => (
+                      <tr key={complaint.token_id}>
+                        <td>{complaint.token_id}</td>
+                        <td>{complaint.student_id}</td>
+                        {/* <td>
             {tech_type === "computer" && <span>{complaint.comp_id}</span>}
             {tech_type === "ac" && <span>{complaint.ac_id}</span>}
             {tech_type === "projectors" && <span>{complaint.proj_id}</span>}
           </td> */}
-                          <td>{complaint.comp_id}</td>
-                          <td>{complaint.description}</td>
-                          <td>
-                            {
-                              new Date(complaint.complaint_date)
-                                .toISOString()
-                                .split("T")[0]
-                            }
-                          </td>
-                          <td className="text-center">
-                            {/* <button onClick={() => handleApproveComplaint(complaint.token_id)} className="btn btn-success">Accept</button> */}
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleApproveComplaint(complaint.token_id);
-                              }}
-                              class="btn btn-success"
-                              style={{ marginRight: "10px" }}
-                            >
-                              Verify
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                              }}
-                              type="submit"
-                              class="btn btn-danger"
-                            >
-                              Reject
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                        <td>{complaint.comp_id}</td>
+                        <td>{complaint.description}</td>
+                        <td>
+                          {
+                            new Date(complaint.complaint_date)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </td>
+                        <td className="text-center">
+                          {/* <button onClick={() => handleApproveComplaint(complaint.token_id)} className="btn btn-success">Accept</button> */}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleApproveComplaint(complaint.token_id);
+                            }}
+                            class="btn btn-success"
+                            style={{ marginRight: "10px" }}
+                          >
+                            Verify
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                            type="submit"
+                            class="btn btn-danger"
+                          >
+                            Reject
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
 
                 <br />
 
-                <label htmlFor="" className="text-black">
-                  Verified but not accepted Complaints :
-                </label>
-                <div className="table-responsive">
-                  <table class="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Token ID</th>
-                        <th>Student ID</th>
-                        <th>Device ID</th>
-                        <th>Description</th>
-                        <th>Complaint Date</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {notAcceptedComplaints.map((complaint) => (
-                        <tr key={complaint.token_id}>
-                          <td>{complaint.token_id}</td>
-                          <td>{complaint.student_id}</td>
-                          {/* <td>
+                <label htmlFor="">Verified but not accepted Complaints :</label>
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Token ID</th>
+                      <th>Student ID</th>
+                      <th>Device ID</th>
+                      <th>Description</th>
+                      <th>Complaint Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {notAcceptedComplaints.map((complaint) => (
+                      <tr key={complaint.token_id}>
+                        <td>{complaint.token_id}</td>
+                        <td>{complaint.student_id}</td>
+                        {/* <td>
             {tech_type === "computer" && <span>{complaint.comp_id}</span>}
             {tech_type === "ac" && <span>{complaint.ac_id}</span>}
             {tech_type === "projectors" && <span>{complaint.proj_id}</span>}
           </td> */}
-                          <td>{complaint.comp_id}</td>
-                          <td>{complaint.description}</td>
-                          <td>
-                            {
-                              new Date(complaint.complaint_date)
-                                .toISOString()
-                                .split("T")[0]
-                            }
-                          </td>
-                          <td className="text-center">
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                deleteComplaint(complaint.token_id);
-                              }}
-                              className="btn btn-danger"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                        <td>{complaint.comp_id}</td>
+                        <td>{complaint.description}</td>
+                        <td>
+                          {
+                            new Date(complaint.complaint_date)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </td>
+                        <td className="text-center">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              deleteComplaint(complaint.token_id);
+                            }}
+                            className="btn btn-danger"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
 
                 <br />
-                <label htmlFor="device" className="text-black">
+                <label htmlFor="device">
                   Accepted and Ongoing Complaints :
                 </label>
-                <div className="table-responsive">
-                  <table class="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Token ID</th>
-                        <th>Student ID</th>
-                        <th>Device ID</th>
-                        <th>Description</th>
-                        <th>Complaint Date</th>
-                        <th>Technician-ID</th>
-                        <th>Chat</th>
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Token ID</th>
+                      <th>Student ID</th>
+                      <th>Device ID</th>
+                      <th>Description</th>
+                      <th>Complaint Date</th>
+                      <th>Technician-ID</th>
+                      <th>Chat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {acceptedComplaints.map((complaint) => (
+                      <tr key={complaint.token_id}>
+                        <td>{complaint.token_id}</td>
+                        <td>{complaint.student_id}</td>
+                        <td>{complaint.device_id}</td>
+                        <td>{complaint.description}</td>
+                        <td>
+                          {
+                            new Date(complaint.complaint_date)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </td>
+                        <td>{complaint.tech_id}</td>
+                        <td className="text-center">
+                          <Link to="/chat" className="btn btn-primary">
+                            Chat
+                          </Link>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {acceptedComplaints.map((complaint) => (
-                        <tr key={complaint.token_id}>
-                          <td>{complaint.token_id}</td>
-                          <td>{complaint.student_id}</td>
-                          <td>{complaint.device_id}</td>
-                          <td>{complaint.description}</td>
-                          <td>
-                            {
-                              new Date(complaint.complaint_date)
-                                .toISOString()
-                                .split("T")[0]
-                            }
-                          </td>
-                          <td>{complaint.tech_id}</td>
-                          <td className="text-center">
-                            <Link to="/chat" className="btn btn-primary">
-                              Chat
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
 
                 <br />
 
-                <label htmlFor="" className="text-black">
-                  Solved Complaints :{" "}
-                </label>
-                <div className="table-responsive">
-                  <table class="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Token ID</th>
-                        <th>Student ID</th>
-                        <th>Device ID</th>
-                        <th>Description</th>
-                        <th>Complaint Date</th>
-                        <th>Resolved Date</th>
-                        <th>Technician-ID</th>
-                        <th>Chat</th>
+                <label htmlFor="">Solved Complaints : </label>
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Token ID</th>
+                      <th>Student ID</th>
+                      <th>Device ID</th>
+                      <th>Description</th>
+                      <th>Complaint Date</th>
+                      <th>Resolved Date</th>
+                      <th>Technician-ID</th>
+                      <th>Chat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {resolvedComplaints.map((complaint) => (
+                      <tr key={complaint.token_id}>
+                        <td>{complaint.token_id}</td>
+                        <td>{complaint.student_id}</td>
+                        <td>{complaint.device_id}</td>
+                        <td>{complaint.description}</td>
+                        <td>
+                          {
+                            new Date(complaint.complaint_date)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </td>
+                        <td>
+                          {
+                            new Date(complaint.resolved_date)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </td>
+                        <td>{complaint.tech_id}</td>
+                        <td className="text-center">
+                          <Link to="/chat" className="btn btn-primary">
+                            Chat
+                          </Link>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {resolvedComplaints.map((complaint) => (
-                        <tr key={complaint.token_id}>
-                          <td>{complaint.token_id}</td>
-                          <td>{complaint.student_id}</td>
-                          <td>{complaint.device_id}</td>
-                          <td>{complaint.description}</td>
-                          <td>
-                            {
-                              new Date(complaint.complaint_date)
-                                .toISOString()
-                                .split("T")[0]
-                            }
-                          </td>
-                          <td>
-                            {
-                              new Date(complaint.resolved_date)
-                                .toISOString()
-                                .split("T")[0]
-                            }
-                          </td>
-                          <td>{complaint.tech_id}</td>
-                          <td className="text-center">
-                            <Link to="/chat" className="btn btn-primary">
-                              Chat
-                            </Link>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
                 <br />
               </form>
             </div>
@@ -481,9 +491,7 @@ export default function Faculty() {
 
             <div className="complaint">
               <form action="">
-                <label htmlFor="" className="text-black">
-                  Computers :
-                </label>
+                <label htmlFor="">Computers :</label>
                 <Link
                   to="/adddevices"
                   style={{ marginLeft: "30px" }}
@@ -492,245 +500,232 @@ export default function Faculty() {
                   Add
                 </Link>
 
-                <div className="table-responsive">
-                  <table className="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Device-ID</th>
-                        <th>Model-ID</th>
-                        <th>Room-ID</th>
-                        <th>Company</th>
-                        <th>DOI</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {/* Map over the comps array to render computer devices */}
-                      {comps.map((device) => (
-                        <tr key={device.device_id}>
-                          <td>{device.device_id}</td>
-                          <td>{device.model_id}</td>
-                          <td>{device.Room_id}</td>
-                          <td>{device.Company}</td>
-                          <td>
-                            {new Date(device.DOI).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                            })}
-                          </td>
-                          <td>{device.status}</td>
-                          <td className="text-center">
-                            <Link
-                              to="/updatedevices"
-                              style={{ marginRight: "10px" }}
-                              className="btn btn-primary"
-                            >
-                              Update
-                            </Link>
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                              }}
-                              type="submit"
-                              className="btn btn-danger"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <br />
-
-                <label htmlFor="" className="text-black">
-                  Projectors :
-                </label>
-                <Link
-                  to="/adddevices"
-                  style={{ marginLeft: "30px" }}
-                  className="btn btn-primary"
-                >
-                  Add
-                </Link>
-
-                <div className="table-responsive">
-                  <table className="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Device-ID</th>
-                        <th>Model-ID</th>
-                        <th>Room-ID</th>
-                        <th>Company</th>
-                        <th>DOI</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {projectors.map((device) => (
-                        <tr key={device.device_id}>
-                          <td>{device.device_id}</td>
-                          <td>{device.model_id}</td>
-                          <td>{device.Room_id}</td>
-                          <td>{device.Company}</td>
-                          <td>
-                            {new Date(device.DOI).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                            })}
-                          </td>
-                          <td>{device.status}</td>
-                          <td className="text-center">
-                            <Link
-                              to="/updatedevices"
-                              style={{ marginRight: "10px" }}
-                              className="btn btn-primary"
-                            >
-                              Update
-                            </Link>
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                              }}
-                              type="submit"
-                              className="btn btn-danger"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <br />
-
-                <label htmlFor="device" className="text-black">
-                  AC :
-                </label>
-                <Link
-                  to="/adddevices"
-                  style={{ marginLeft: "30px" }}
-                  className="btn btn-primary"
-                >
-                  Add
-                </Link>
-
-                <div className="table-responsive">
-                  <table className="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Device-ID</th>
-                        <th>Model-ID</th>
-                        <th>Room-ID</th>
-                        <th>Company</th>
-                        <th>DOI</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {ac.map((device) => (
-                        <tr key={device.device_id}>
-                          <td>{device.device_id}</td>
-                          <td>{device.model_id}</td>
-                          <td>{device.Room_id}</td>
-                          <td>{device.Company}</td>
-                          <td>
-                            {new Date(device.DOI).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                            })}
-                          </td>
-                          <td>{device.status}</td>
-                          <td className="text-center">
-                            <Link
-                              to="/updatedevices"
-                              style={{ marginRight: "10px" }}
-                              className="btn btn-primary"
-                            >
-                              Update
-                            </Link>
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                              }}
-                              type="submit"
-                              className="btn btn-danger"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <label htmlFor="" className="text-black">
-                  Other :{" "}
-                </label>
-                <Link
-                  to="/adddevices"
-                  style={{ marginLeft: "30px" }}
-                  className="btn btn-primary"
-                >
-                  Add
-                </Link>
-
-                <div className="table-responsive">
-                  <table className="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Device-ID</th>
-                        <th>Model-ID</th>
-                        <th>Room-ID</th>
-                        <th>Company</th>
-                        <th>DOI</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>12345</td>
-                        <td>R1</td>
-                        <td>xyz</td>
-                        <td>1/1/2024</td>
-                        <td>Working/No</td>
-                        <td class="text-center">
-                          <form action="">
-                            <Link
-                              to="/updatedevices"
-                              style={{ marginRight: "10px" }}
-                              className="btn btn-primary"
-                            >
-                              Update
-                            </Link>
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                              }}
-                              type="submit"
-                              class="btn btn-danger"
-                            >
-                              Delete
-                            </button>
-                          </form>
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Deivce-ID</th>
+                      <th>Model-ID(Too much other info acc to data)</th>
+                      <th>Room-ID(Dept?)</th>
+                      <th>Company</th>
+                      <th>DOI</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Map over the comps array to render computer devices */}
+                    {comps.map((device) => (
+                      <tr key={device.device_id}>
+                        <td>{device.device_id}</td>
+                        <td>{device.model_id}</td>
+                        <td>{device.Room_id}</td>
+                        <td>{device.Company}</td>
+                        <td>
+                          {new Date(device.DOI).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          })}
+                        </td>
+                        <td>{device.status}</td>
+                        <td className="text-center">
+                          <Link
+                            to="/updatedevices"
+                            style={{ marginRight: "10px" }}
+                            className="btn btn-primary"
+                          >
+                            Update
+                          </Link>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                            type="submit"
+                            className="btn btn-danger"
+                          >
+                            Delete
+                          </button>
                         </td>
                       </tr>
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
+
+                <br />
+
+                <label htmlFor="">Projectors :</label>
+                <Link
+                  to="/adddevices"
+                  style={{ marginLeft: "30px" }}
+                  className="btn btn-primary"
+                >
+                  Add
+                </Link>
+
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Deivce-ID</th>
+                      <th>Model-ID(Too much other info acc to data)</th>
+                      <th>Room-ID(Dept?)</th>
+                      <th>Company</th>
+                      <th>DOI</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {projectors.map((device) => (
+                      <tr key={device.device_id}>
+                        <td>{device.device_id}</td>
+                        <td>{device.model_id}</td>
+                        <td>{device.Room_id}</td>
+                        <td>{device.Company}</td>
+                        <td>
+                          {new Date(device.DOI).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          })}
+                        </td>
+                        <td>{device.status}</td>
+                        <td className="text-center">
+                          <Link
+                            to="/updatedevices"
+                            style={{ marginRight: "10px" }}
+                            className="btn btn-primary"
+                          >
+                            Update
+                          </Link>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                            type="submit"
+                            className="btn btn-danger"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                <br />
+
+                <label htmlFor="device">AC :</label>
+                <Link
+                  to="/adddevices"
+                  style={{ marginLeft: "30px" }}
+                  className="btn btn-primary"
+                >
+                  Add
+                </Link>
+
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Deivce-ID</th>
+                      <th>Model-ID(Too much other info acc to data)</th>
+                      <th>Room-ID(Dept?)</th>
+                      <th>Company</th>
+                      <th>DOI</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ac.map((device) => (
+                      <tr key={device.device_id}>
+                        <td>{device.device_id}</td>
+                        <td>{device.model_id}</td>
+                        <td>{device.Room_id}</td>
+                        <td>{device.Company}</td>
+                        <td>
+                          {new Date(device.DOI).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          })}
+                        </td>
+                        <td>{device.status}</td>
+                        <td className="text-center">
+                          <Link
+                            to="/updatedevices"
+                            style={{ marginRight: "10px" }}
+                            className="btn btn-primary"
+                          >
+                            Update
+                          </Link>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                            type="submit"
+                            className="btn btn-danger"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                <label htmlFor="">Other : </label>
+                <Link
+                  to="/adddevices"
+                  style={{ marginLeft: "30px" }}
+                  className="btn btn-primary"
+                >
+                  Add
+                </Link>
+
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Deivce-ID</th>
+                      <th>Model-ID(Too much other info acc to data)</th>
+                      <th>Room-ID(Dept?)</th>
+                      <th>Company</th>
+                      <th>DOI</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>12345</td>
+                      <td>R1</td>
+                      <td>xyz</td>
+                      <td>1/1/2024</td>
+                      <td>Working/No</td>
+                      <td class="text-center">
+                        {/* <form method="POST" action=""> */}
+                        <form action="">
+                          <Link
+                            to="/updatedevices"
+                            style={{ marginRight: "10px" }}
+                            className="btn btn-primary"
+                          >
+                            Update
+                          </Link>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                            type="submit"
+                            class="btn btn-danger"
+                          >
+                            Delete
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
                 <br />
               </form>
             </div>
@@ -742,11 +737,11 @@ export default function Faculty() {
 
       {selectedOption === "staff" && (
         <div>
-          <h2 class="gradient-text_b" >Welcome Faculty/Admin!</h2>
+          <h2>Welcome Faculty/Admin!</h2>
           <div className="box">
             <div className="head">
-              <h2 class="gradient-text_b">Staff</h2>
-              <h3 class="gradient-text_r">
+              <h2>Staff</h2>
+              <h3>
                 {sessionStorage.getItem("userID")}:{" "}
                 {sessionStorage.getItem("name")}
               </h3>
@@ -754,9 +749,7 @@ export default function Faculty() {
 
             <div className="complaint">
               <form action="">
-                <label htmlFor="" className="text-black">
-                  Students :
-                </label>
+                <label htmlFor="">Students :</label>
                 <Link
                   to="/addstaff"
                   style={{ marginLeft: "30px" }}
@@ -765,55 +758,52 @@ export default function Faculty() {
                   Add
                 </Link>
 
-                <div className="table-responsive">
-                  <table className="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>MIS/ID</th>
-                        <th>Name/Uname</th>
-                        <th>Password</th>
-                        <th>Branch</th>
-                        <th>Contact No</th>
-                        <th>Action</th>
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>MIS/ID</th>
+                      <th>Name/Uname</th>
+                      <th>Password</th>
+                      <th>Branch</th>
+                      <th>Contact No</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {student.map((staffMember) => (
+                      <tr key={staffMember.MIS}>
+                        <td>{staffMember.MIS}</td>
+                        <td>{staffMember.name}</td>
+                        <td>{staffMember.password}</td>
+                        <td>{staffMember.branch}</td>
+                        <td>{staffMember.contact_no}</td>
+                        {/* Add more columns if needed */}
+                        <td className="text-center">
+                          <Link
+                            to={`/updatestaff/${staffMember.id}`}
+                            style={{ marginRight: "10px" }}
+                            className="btn btn-primary"
+                          >
+                            Update
+                          </Link>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                            type="submit"
+                            className="btn btn-danger"
+                          >
+                            Delete
+                          </button>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {student.map((staffMember) => (
-                        <tr key={staffMember.MIS}>
-                          <td>{staffMember.MIS}</td>
-                          <td>{staffMember.name}</td>
-                          <td>{staffMember.password}</td>
-                          <td>{staffMember.branch}</td>
-                          <td>{staffMember.contact_no}</td>
-                          <td className="text-center">
-                            <Link
-                              to={`/updatestaff/${staffMember.id}`}
-                              style={{ marginRight: "10px" }}
-                              className="btn btn-primary"
-                            >
-                              Update
-                            </Link>
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                              }}
-                              type="submit"
-                              className="btn btn-danger"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
 
                 <br />
 
-                <label htmlFor="" className="text-black">
-                  Technicians :
-                </label>
+                <label htmlFor="">Technicians :</label>
                 <Link
                   to="/addstaff"
                   style={{ marginLeft: "30px" }}
@@ -822,61 +812,58 @@ export default function Faculty() {
                   Add
                 </Link>
 
-                <div className="table-responsive">
-                  <table className="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>TECH-ID</th>
-                        <th>Name/Uname</th>
-                        <th>Password</th>
-                        <th>Contact No</th>
-                        <th>Address</th>
-                        <th>City</th>
-                        <th>Zip</th>
-                        <th>Field</th>
-                        <th>Action</th>
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>TECH-ID</th>
+                      <th>Name/Uname</th>
+                      <th>Password</th>
+                      <th>Contact No</th>
+                      <th>Address</th>
+                      <th>City</th>
+                      <th>Zip</th>
+                      <th>Field</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tech.map((technician) => (
+                      <tr key={technician.MIS}>
+                        <td>{technician.MIS}</td>
+                        <td>{technician.name}</td>
+                        <td>{technician.password}</td>
+                        <td>{technician.contact_no}</td>
+                        <td>{technician.address}</td>
+                        <td>{technician.city}</td>
+                        <td>{technician.zip}</td>
+                        <td>{technician.field}</td>
+                        {/* Add more columns if needed */}
+                        <td className="text-center">
+                          <Link
+                            to={`/updatetechnician/${technician.MIS}`}
+                            style={{ marginRight: "10px" }}
+                            className="btn btn-primary"
+                          >
+                            Update
+                          </Link>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault(); /* Handle delete functionality */
+                            }}
+                            type="submit"
+                            className="btn btn-danger"
+                          >
+                            Delete
+                          </button>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {tech.map((technician) => (
-                        <tr key={technician.MIS}>
-                          <td>{technician.MIS}</td>
-                          <td>{technician.name}</td>
-                          <td>{technician.password}</td>
-                          <td>{technician.contact_no}</td>
-                          <td>{technician.address}</td>
-                          <td>{technician.city}</td>
-                          <td>{technician.zip}</td>
-                          <td>{technician.field}</td>
-                          <td className="text-center">
-                            <Link
-                              to={`/updatetechnician/${technician.MIS}`}
-                              style={{ marginRight: "10px" }}
-                              className="btn btn-primary"
-                            >
-                              Update
-                            </Link>
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                              }}
-                              type="submit"
-                              className="btn btn-danger"
-                            >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
 
                 <br />
 
-                <label htmlFor="" className="text-black">
-                  Faculty/Admin : (Not in db)
-                </label>
+                <label htmlFor="">Faculty/Admin : (Not in db)</label>
                 <Link
                   to="/addstaff"
                   style={{ marginLeft: "30px" }}
@@ -885,25 +872,21 @@ export default function Faculty() {
                   Add
                 </Link>
 
-                <div className="table-responsive">
-                  <table className="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Uname</th>
-                        <th>Name</th>
-                        <th>Password</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody></tbody>
-                  </table>
-                </div>
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Uname</th>
+                      <th>Name</th>
+                      <th>Password</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
 
                 <br />
 
-                <label htmlFor="" className="text-black">
-                  Account Section : (Not in db)
-                </label>
+                <label htmlFor="">Account Section : (Not in db)</label>
                 <Link
                   to="/addstaff"
                   style={{ marginLeft: "30px" }}
@@ -912,19 +895,18 @@ export default function Faculty() {
                   Add
                 </Link>
 
-                <div className="table-responsive">
-                  <table className="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Id</th>
-                        <th>Bank</th>
-                        <th>Account-No</th>
-                        <th>Password</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                  </table>
-                </div>
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Id</th>
+                      <th>Bank</th>
+                      <th>Account-No</th>
+                      <th>Password</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                </table>
+
                 <br />
               </form>
             </div>
@@ -936,11 +918,11 @@ export default function Faculty() {
 
       {selectedOption === "bills" && (
         <div>
-          <h2 class="gradient-text_b" >Welcome Faculty/Admin!</h2>
+          <h2>Welcome Faculty/Admin!</h2>
           <div className="box">
             <div className="head">
-              <h2 class="gradient-text_b">Bills</h2>
-              <h3 class="gradient-text_r">
+              <h2>Bills</h2>
+              <h3>
                 {sessionStorage.getItem("userID")}:{" "}
                 {sessionStorage.getItem("name")}
               </h3>
@@ -948,80 +930,69 @@ export default function Faculty() {
 
             <div className="complaint">
               <form action="">
-                <label htmlFor="" className="text-black">
-                  Solved complaints :
-                </label>
-                <div className="table-responsive">
-                  <table className="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Token ID</th>
-                        <th>Student ID</th>
-                        <th>Device ID</th>
-                        <th>Description</th>
-                        <th>Complaint Date</th>
-                        <th>Resolved Date</th>
-                        <th>Technician-ID</th>
-                        <th>Chat</th>
+                <label htmlFor="">Solved complaints :</label>
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Token ID</th>
+                      <th>Student ID</th>
+                      <th>Device ID</th>
+                      <th>Description</th>
+                      <th>Complaint Date</th>
+                      <th>Resolved Date</th>
+                      <th>Technician-ID</th>
+                      <th>Chat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {resolvedComplaints.map((complaint) => (
+                      <tr key={complaint.token_id}>
+                        <td>{complaint.token_id}</td>
+                        <td>{complaint.student_id}</td>
+                        <td>{complaint.device_id}</td>
+                        <td>{complaint.description}</td>
+                        <td>
+                          {
+                            new Date(complaint.complaint_date)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </td>
+                        <td>
+                          {
+                            new Date(complaint.resolved_date)
+                              .toISOString()
+                              .split("T")[0]
+                          }
+                        </td>
+                        <td>{complaint.tech_id}</td>
+                        <td style={{ color: "blue" }}>
+                          <strong>For payment contact Acc Section</strong>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {resolvedComplaints.map((complaint) => (
-                        <tr key={complaint.token_id}>
-                          <td>{complaint.token_id}</td>
-                          <td>{complaint.student_id}</td>
-                          <td>{complaint.device_id}</td>
-                          <td>{complaint.description}</td>
-                          <td>
-                            {
-                              new Date(complaint.complaint_date)
-                                .toISOString()
-                                .split("T")[0]
-                            }
-                          </td>
-                          <td>
-                            {
-                              new Date(complaint.resolved_date)
-                                .toISOString()
-                                .split("T")[0]
-                            }
-                          </td>
-                          <td>{complaint.tech_id}</td>
-                          <td style={{ color: "blue" }}>
-                            <strong>For payment contact Acc Section</strong>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
 
                 <br />
 
-                <label htmlFor="" className="text-black">
-                  Verified but Pending Bills :
-                </label>
+                <label htmlFor="">Verified but Pending Bills :</label>
 
                 <br />
-
-                <label htmlFor="device" className="text-black">
-                  Paid Bills :
-                </label>
-                <div className="table-responsive">
-                  <table className="table table-bordered mb-5">
-                    <thead>
-                      <tr>
-                        <th>Token ID</th>
-                        <th>Student ID</th>
-                        <th>Device ID</th>
-                        <th>Description</th>
-                        <th>Complaint Date</th>
-                        <th>Technician-ID</th>
-                        <th>Paid</th>
-                      </tr>
-                    </thead>
-                  </table>
-                </div>
+                <label htmlFor="device">Paid Bills :</label>
+                <table class="table table-bordered mb-5">
+                  <thead>
+                    <tr>
+                      <th>Token ID</th>
+                      <th>Student ID</th>
+                      <th>Device ID</th>
+                      <th>Description</th>
+                      <th>Complaint Date</th>
+                      <th>Technician-ID</th>
+                      <th>Paid</th>
+                    </tr>
+                  </thead>
+                </table>
 
                 <br />
               </form>
@@ -1031,6 +1002,21 @@ export default function Faculty() {
           <div className="foot"></div>
         </div>
       )}
+
+      <Alert
+        show={showAlertDel}
+        variant="danger"
+        style={{
+          position: "fixed", // Change to fixed
+          bottom: "500px", // Adjust bottom distance as needed
+          height: "60px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: "9999",
+        }}
+      >
+        DELETED X
+      </Alert>
     </div>
   );
 }

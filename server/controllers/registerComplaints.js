@@ -124,8 +124,8 @@ exports.registerComplaintQR = async(req,res) =>{
 exports.getStudentComplaints = async (req, res) => {
     try {
         const { student_id } = req.body;
-        console.log(req.body)
-        console.log(student_id);
+        // console.log(req.body)
+        // console.log(student_id);
         const get_complaints_query = `
         SELECT 
         ac_id AS device_id,
@@ -170,7 +170,7 @@ exports.getStudentComplaints = async (req, res) => {
                 return res.status(500).json({ error: 'Internal server error' });
             }
 
-            console.log('Retrieved complaints:', results); // Add logging here to see the results
+           // console.log('Retrieved complaints:', results); // Add logging here to see the results
 
             return res.status(200).json({
                 data: results

@@ -9,7 +9,6 @@ export default function AboutUs() {
     <div>
       <Header/>
       <h2>ABOUT US</h2>
-      
       <div className="about">
         <div className="left">
             <img src={abtImage} alt="abt" />

@@ -63,6 +63,7 @@ export default function Header() {
                                     Account
                                 </Link>
                             </Nav.Link>
+                            
                         </Nav>
                         <div className="logout-container">
                             <button className="btn btn-danger d-flex justify-content-center" onClick={handleLogout}>

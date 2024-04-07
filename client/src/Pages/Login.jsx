@@ -31,7 +31,7 @@ const UserLogin = ({ userType}) => {
         `http://localhost:4000/api/v1/${path}`,
         { username, password }
       );
-      console.log(response.data);
+      // console.log(response.data);
       const userID = response.data.data[0].mis;
       const name = response.data.data[0].name;
       const user_type = response.data.user_type;

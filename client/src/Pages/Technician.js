@@ -31,10 +31,9 @@ export default function Technician() {
     try {
       const response = await axios.get('http://localhost:4000/api/v1/getAllComplaints');
       const { data } = response.data;
-      console.log("hi:",response);
       setOngoingComplaints(data.filter(complaint => !complaint.tech_id));
       setAcceptedComplaints(data.filter(complaint => complaint.tech_id && !complaint.resolved_date ));
-      console.log(acceptedComplaints);
+      // console.log(acceptedComplaints);
       setResolvedComplaints(data.filter(complaint => complaint.tech_id && complaint.resolved_date ));
     } catch (error) {
       console.error('Error fetching complaints:', error);
@@ -44,7 +43,7 @@ export default function Technician() {
   const handleAcceptComplaint = async (token_id) => {
     try {
       const response = await axios.post('http://localhost:4000/api/v1/acceptComplaints', { token_id, tech_id: 110002, tech_type: 'computer', user_type: 'technician' });
-      console.log('Complaint accepted:', response.data);
+      // console.log('Complaint accepted:', response.data);
       setShowAlert(true);
       getAllComplaints();
       setTimeout(() => {
@@ -59,7 +58,7 @@ export default function Technician() {
     try {
       let tech_id = 110002;
       const response = await axios.post('http://localhost:4000/api/v1/resolveComplaints', { tech_id,token_id, tech_type: 'computer', user_type: 'technician' });
-      console.log('Complaint resolved:', response.data);
+      // console.log('Complaint resolved:', response.data);
       setShowAlert(true);
       getAllComplaints();
       setTimeout(() => {
