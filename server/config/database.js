@@ -7,8 +7,8 @@ const dbConnect = () => {
   const connection = mysql.createConnection({
 
     host: 'localhost',
-    user: 'predator',
-    password: 'predator',
+    user: 'root',
+    password: '',
 
     database: 'infrastructure_management'
   });

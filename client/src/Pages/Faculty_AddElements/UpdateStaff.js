@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import Header from '../../common/Header';
 import { Link } from 'react-router-dom';
 
+
 export default function UpdateStaff() {
   const [userType, setUserType] = useState('student'); // Default to student
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    };
+  };
 
   return (
     <div>
@@ -25,7 +26,7 @@ export default function UpdateStaff() {
 
         <div className="complaint">
           <form action="">
-            <label htmlFor="userType">User type: </label>
+            <label htmlFor="userType" className="text-black">User type: </label>
             <br />
             <select
               className="custom-select"
@@ -44,19 +45,19 @@ export default function UpdateStaff() {
             {/* Conditional rendering based on userType */}
             {userType === 'student' && (
               <>
-                <label htmlFor="MIS">MIS: </label>
+                <label htmlFor="MIS" className="text-black">MIS: </label>
                 <input type="text" id="MIS" />
                 <br />
-                <label htmlFor="password">Password: </label>
+                <label htmlFor="password" className="text-black">Password: </label>
                 <input type="password" id="password" />
                 <br />
-                <label htmlFor="name">Name: </label>
+                <label htmlFor="name" className="text-black">Name: </label>
                 <input type="text" id="name" />
                 <br />
-                <label htmlFor="branch">Branch: </label>
+                <label htmlFor="branch" className="text-black">Branch: </label>
                 <input type="text" id="branch" />
                 <br />
-                <label htmlFor="contactNo">Contact No: </label>
+                <label htmlFor="contactNo" className="text-black">Contact No: </label>
                 <input type="text" id="contactNo" />
                 <br />
               </>
@@ -64,28 +65,28 @@ export default function UpdateStaff() {
 
             {userType === 'technician' && (
               <>
-                <label htmlFor="tech_id">Tech ID: </label>
+                <label htmlFor="tech_id" className="text-black">Tech ID: </label>
                 <input type="text" id="tech_id" />
                 <br />
-                <label htmlFor="password">Password: </label>
+                <label htmlFor="password" className="text-black">Password: </label>
                 <input type="password" id="password" />
                 <br />
-                <label htmlFor="name">Name: </label>
+                <label htmlFor="name" className="text-black">Name: </label>
                 <input type="text" id="name" />
                 <br />
-                <label htmlFor="contactNo">Contact No: </label>
+                <label htmlFor="contactNo" className="text-black">Contact No: </label>
                 <input type="text" id="contactNo" />
                 <br />
-                <label htmlFor="address">Address: </label>
+                <label htmlFor="address" className="text-black">Address: </label>
                 <input type="text" id="address" />
                 <br />
-                <label htmlFor="city">City: </label>
+                <label htmlFor="city" className="text-black">City: </label>
                 <input type="text" id="city" />
                 <br />
-                <label htmlFor="zipCode">Zip Code: </label>
+                <label htmlFor="zipCode" className="text-black">Zip Code: </label>
                 <input type="text" id="zipCode" />
                 <br />
-                <label htmlFor="device">Select Device: </label>
+                <label htmlFor="device" className="text-black">Select Device: </label>
                 <select className="custom-select" name="device" id="device">
                   <option value="PC">Computers</option>
                   <option value="AC">AC</option>
@@ -98,13 +99,13 @@ export default function UpdateStaff() {
 
             {userType === 'admin' && (
               <>
-                <label htmlFor="name">Name: </label>
+                <label htmlFor="name" className="text-black">Name: </label>
                 <input type="text" id="name" />
                 <br />
-                <label htmlFor="username">Username: </label>
+                <label htmlFor="username" className="text-black">Username: </label>
                 <input type="text" id="username" />
                 <br />
-                <label htmlFor="password">Password: </label>
+                <label htmlFor="password" className="text-black">Password: </label>
                 <input type="password" id="password" />
                 <br />
               </>

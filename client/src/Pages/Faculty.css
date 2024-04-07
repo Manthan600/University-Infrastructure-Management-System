@@ -39,3 +39,48 @@
 .option-button:checked+label:first-of-type {
   margin-right: 10px;
 }
+
+
+.gradient-text_b {
+  background-image: linear-gradient(to right, #2200ff, #ff00ae);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-text_r {
+  background-image: linear-gradient(to right, #1e00ff, #ff0101);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+
+/* for table to make them responsive */
+
+.table-responsive {
+  overflow-x: auto; /* Add horizontal scrolling */
+}
+
+@media (max-width: 767px) {
+  /* For smaller screens */
+  .table-responsive table {
+    font-size: 12px; /* Adjust font size for smaller screens */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  /* For tablets */
+  .table-responsive table {
+    font-size: 14px; /* Adjust font size for tablets */
+  }
+}
+
+@media (min-width: 992px) {
+  /* For laptops/desktops */
+  .table-responsive table {
+    font-size: 16px; /* Default font size for laptops/desktops */
+  }
+}
+
+

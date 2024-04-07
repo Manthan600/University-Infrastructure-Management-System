@@ -10,14 +10,14 @@ body {
     background-size: 50vw auto; 
     background-repeat: no-repeat; 
     background-position: center top 30px; 
-    background-color: #8d54f7;
+    background-color: #35078b;
 }
 
 h2{
   text-align: center !important;
   margin: 25px 0 !important;
   font-family: 'Lato', sans-serif !important;
-  font-size: 3rem !important;
+  font-size: 2.5rem;
   font-weight: 900 !important;
   text-transform: uppercase;
 }
@@ -63,9 +63,24 @@ select {
     outline: none;
     min-height: 40px;
     height: auto;
-    font-size: x-large !important;
-    margin-left: 20px !important;
+    font-size: x-large;
 }
+
+.gradient-text_b {
+  background-image: linear-gradient(to right, #2200ff, #ff00ae);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-text_r {
+  background-image: linear-gradient(to right, #1e00ff, #ff0101);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+
 
 
 /* ************************************* check this  */
@@ -77,11 +92,10 @@ select option:hover {
 .head {
     text-transform: uppercase;
     text-align: center;
-    padding: 15px;
+    /* padding: 15px; */
 }
 
 .inp {
-  margin-left: 20px !important;
     width: auto;
     min-height: 20px;
     font-size: x-large !important;
@@ -95,7 +109,7 @@ select option:hover {
 .description {
   min-height: 100px;
   height: auto;
-    width: 90%;
+    width: 100%;
     border: 1px solid rgb(201, 199, 199);
     padding: 5px !important;
     box-sizing: border-box;
@@ -134,11 +148,6 @@ form button:hover {
     background-color: transparent;
 }
 
-
-/* 888888888888888888888888888888888888888888888888888888888888888888888888888 */
-/* 888888888888888888888888888888888888888888888888888888888888888888888888888 */
-/* 888888888888888888888888888888888888888888888888888888888888888888888888888 */
-/* 888888888888888888888888888888888888888888888888888888888888888888888888888 */
 
 .options{
     margin-top: 10px;
@@ -274,5 +283,26 @@ form button:hover {
     outline: none;
   }
 
+
+/* For smaller screen sizes */
+@media (max-width: 767px) {
+  .table-responsive table {
+    font-size: 12px; /* Reduce font size for smaller screens */
+  }
+}
+
+/* For tablets */
+@media (min-width: 768px) and (max-width: 991px) {
+  .table-responsive table {
+    font-size: 14px; /* Adjust font size for tablets */
+  }
+}
+
+/* For laptops/desktops */
+@media (min-width: 992px) {
+  .table-responsive table {
+    font-size: 16px; /* Default font size for laptops/desktops */
+  }
+} 
 
 
