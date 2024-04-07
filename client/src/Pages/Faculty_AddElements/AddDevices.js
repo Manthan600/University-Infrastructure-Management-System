@@ -114,16 +114,16 @@ const DeviceForm = ({ isUpdate }) => {
       <form onSubmit={handleSubmit}>
         <div className="box">
         <div className="head">
-          <h2>ADD DEVICE</h2>
-          <h3>{sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
+          <h2 className="text-black">ADD DEVICE</h2>
+          <h3 className="text-black">{sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
         </div>
           <div className="complaint">
             <div>
-              <label htmlFor="no_of_devices">Number of Devices:</label>
+              <label htmlFor="no_of_devices" className="text-black">Number of Devices:</label>
               <input className='inp' type="number" name="no_of_devices" value={formData.no_of_devices} onChange={handleChange} required />
             </div>
             <div>
-              <label htmlFor="device_type">Device Type:</label>
+              <label htmlFor="device_type" className="text-black">Device Type:</label>
               <select name="device_type" value={formData.device_type} onChange={handleChange} required>
                 <option value="">Select Device Type</option>
                 <option value="computer">Computer</option>
@@ -132,9 +132,9 @@ const DeviceForm = ({ isUpdate }) => {
               </select>
             </div>
             <div>
-              <label htmlFor="model_id">Model ID:</label>
+              <label htmlFor="model_id" className="text-black">Model ID:</label>
               <select name="model_id" value={formData.device_info.model_id} onChange={handleChange} required>
-                <option value="">Select Model ID</option>
+                <option value="" className="text-black">Select Model ID</option>
                 {[...Array(5)].map((_, index) => (
                   <option key={index + 1} value={index + 1}>{index + 1}</option>
                 ))}
@@ -145,7 +145,7 @@ const DeviceForm = ({ isUpdate }) => {
 
               <div>
                 <div>
-                  <label htmlFor="Room_id">Room ID:</label>
+                  <label htmlFor="Room_id" className="text-black">Room ID:</label>
                   <select name="Room_id" value={formData.device_info.Room_id} onChange={handleChange} required>
                     <option value="">Select Room ID</option>
                     {availableRooms && Object.keys(availableRooms).flatMap(key => (
@@ -162,15 +162,15 @@ const DeviceForm = ({ isUpdate }) => {
 
             </div>
             <div>
-              <label htmlFor="Company">Company:</label>
+              <label htmlFor="Company" className="text-black">Company:</label>
               <input className='inp' type="text" name="Company" value={formData.device_info.Company} onChange={handleChange} required />
             </div>
             <div>
-              <label htmlFor="DOI">Date of Installation (DOI):</label>
+              <label htmlFor="DOI" className="text-black">Date of Installation (DOI):</label>
               <input className='inp' type="date" name="DOI" value={formData.device_info.DOI} onChange={handleChange} required />
             </div>
             <div>
-              <label htmlFor="status">Status:</label>
+              <label htmlFor="status" className="text-black">Status:</label>
               <input className='inp' type="text" name="status" value={formData.device_info.status} readOnly />
             </div>
             <button

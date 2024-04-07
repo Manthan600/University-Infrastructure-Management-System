@@ -17,7 +17,7 @@ export default function Chat() {
     <>
       <Header />
       <h2>Chat Section</h2>
-      <h2>Not yet implemented</h2>
+      <h2 class="gradient-text_b">Work Under Construction</h2>
 
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <Link to='/faculty' className='btn btn-primary'>Back</Link>

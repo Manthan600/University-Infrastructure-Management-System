@@ -169,13 +169,13 @@ export default function AddStaff() {
 
       <div className="box">
         <div className="head">
-          <h2>ADD Staff</h2>
-          <h3>{sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
+          <h2 className="text-black">ADD Staff</h2>
+          <h3 className="text-black">{sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
         </div>
 
         <div className="complaint">
           <form onSubmit={handleSubmit}>
-            <label htmlFor="userType">User type: </label>
+            <label htmlFor="userType" className="text-black">User type: </label>
             <br />
             <select
               className="custom-select"
@@ -195,20 +195,20 @@ export default function AddStaff() {
             {/* Conditional rendering based on userType */}
             {userType === 'student' && (
               <>
-                <label htmlFor="MIS">MIS: </label>
+                <label htmlFor="MIS" className="text-black">MIS: </label>
                 <input type="text" id="MIS" name="MIS" value={formData.data.MIS} onChange={handleChange} required />
                 <br />
                 {/* Add the required attribute */}
-                <label htmlFor="password">Password: </label>
+                <label htmlFor="password" className="text-black">Password: </label>
                 <input type="password" id="password" name="password" value={formData.data.password} onChange={handleChange} required />
                 <br />
-                <label htmlFor="name">Name: </label>
+                <label htmlFor="name" className="text-black">Name: </label>
                 <input type="text" id="name" name="name" value={formData.data.name} onChange={handleChange} required />
                 <br />
-                <label htmlFor="branch">Branch: </label>
+                <label htmlFor="branch" className="text-black">Branch: </label>
                 <input type="text" id="branch" name="branch" value={formData.data.branch} onChange={handleChange} required />
                 <br />
-                <label htmlFor="contact_no">Contact No: </label>
+                <label htmlFor="contact_no" className="text-black">Contact No: </label>
                 <input type="number" id="contact_no" name="contactNo" value={formData.data.contactNo} onChange={handleChange} required />
                 <br />
               </>
@@ -216,28 +216,28 @@ export default function AddStaff() {
 
             {userType === 'technician' && (
               <>
-                <label htmlFor="tech_id">Tech ID: </label>
+                <label htmlFor="tech_id" className="text-black">Tech ID: </label>
                 <input type="text" id="tech_id" name="tech_id" value={formData.data.tech_id} onChange={handleChange} required />
                 <br />
-                <label htmlFor="password">Password: </label>
+                <label htmlFor="password" className="text-black">Password: </label>
                 <input type="password" id="password" name="password" value={formData.data.password} onChange={handleChange} required />
                 <br />
-                <label htmlFor="name">Name: </label>
+                <label htmlFor="name" className="text-black">Name: </label>
                 <input type="text" id="name" name="name" value={formData.data.name} onChange={handleChange} required />
                 <br />
-                <label htmlFor="contact_no">Contact No: </label>
+                <label htmlFor="contact_no" className="text-black">Contact No: </label>
                 <input type="text" id="contact_no" name="contactNo" value={formData.data.contactNo} onChange={handleChange} required />
                 <br />
-                <label htmlFor="address">Address: </label>
+                <label htmlFor="address" className="text-black">Address: </label>
                 <input type="text" id="address" name="address" value={formData.data.address} onChange={handleChange} required />
                 <br />
-                <label htmlFor="city">City: </label>
+                <label htmlFor="city" className="text-black">City: </label>
                 <input type="text" id="city" name="city" value={formData.data.city} onChange={handleChange} required />
                 <br />
-                <label htmlFor="zip">Zip Code: </label>
+                <label htmlFor="zip" className="text-black">Zip Code: </label>
                 <input type="text" id="zip" name="zip" value={formData.data.zip} onChange={handleChange} required />
                 <br />
-                <label htmlFor="field">Select Field: </label>
+                <label htmlFor="field" className="text-black">Select Field: </label>
                 <select className="custom-select" name="field" id="field" value={formData.data.field} onChange={handleChange} required>
                   <option value="">Select Field</option>
                   <option value="PC">Computers</option>
@@ -246,7 +246,7 @@ export default function AddStaff() {
                   <option value="Other">Other</option>
                 </select>
                 <br />
-                <label htmlFor="email">Email: </label>
+                <label htmlFor="email" className="text-black">Email: </label>
                 <input type="text" id="email" name="email" value={formData.data.email} onChange={handleChange} required />
                 <br />
               </>
@@ -254,13 +254,13 @@ export default function AddStaff() {
 
             {userType === 'admin' && (
               <>
-                <label htmlFor="name">Name: </label>
+                <label htmlFor="name" className="text-black">Name: </label>
                 <input type="text" id="name" name="name" value={formData.data.name} onChange={handleChange} required />
                 <br />
-                <label htmlFor="username">Username: </label>
+                <label htmlFor="username" className="text-black">Username: </label>
                 <input type="text" id="username" name="username" value={formData.data.username} onChange={handleChange} required />
                 <br />
-                <label htmlFor="password">Password: </label>
+                <label htmlFor="password" className="text-black">Password: </label>
                 <input type="password" id="password" name="password" value={formData.data.password} onChange={handleChange} required />
                 <br />
               </>
@@ -269,13 +269,13 @@ export default function AddStaff() {
 
             {userType === 'account_section' && (
               <>
-                <label htmlFor="name">Name: </label>
+                <label htmlFor="name" className="text-black">Name: </label>
                 <input type="text" id="name" name="name" value={formData.data.name} onChange={handleChange} required />
                 <br />
-                <label htmlFor="username">Username: </label>
+                <label htmlFor="username" className="text-black">Username: </label>
                 <input type="text" id="username" name="username" value={formData.data.username} onChange={handleChange} required />
                 <br />
-                <label htmlFor="password">Password: </label>
+                <label htmlFor="password" className="text-black">Password: </label>
                 <input type="password" id="password" name="password" value={formData.data.password} onChange={handleChange} required />
                 <br />
               </>

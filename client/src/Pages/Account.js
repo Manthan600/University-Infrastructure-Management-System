@@ -19,17 +19,18 @@ export default function Account() {
     <div>
       <Header />
       <div>
-        <h2>Welcome Account!</h2>
+        <h2 class="gradient-text_b">Welcome Account!</h2>
         <div className="box">
           <div className="head">
-            <h2>Bills</h2>
-            <h3>AccNo/Bank</h3>
+            <h2 class="gradient-text_b">Bills</h2>
+            <h3 class="gradient-text_r">AccNo/Bank</h3>
           </div>
 
           <div className="complaint">
 
             <form action="">
-              <label htmlFor="">Pending Bills : </label>
+              <label htmlFor="" className='text-black'>Pending Bills : </label>
+              <div className="table-responsive">
               <table class="table table-bordered mb-5" >
                 <thead >
                   <tr>
@@ -63,11 +64,13 @@ export default function Account() {
                   </tr>
                 </tbody>
               </table>
+              </div>
 
               <br />
 
               
-              <label htmlFor="">Paid Bills : </label>
+              <label htmlFor="" className='text-black'>Paid Bills : </label>
+              <div className="table-responsive">
               <table class="table table-bordered mb-5" >
                 <thead >
                   <tr>
@@ -101,6 +104,7 @@ export default function Account() {
                   </tr>
                 </tbody>
               </table>
+              </div>
 
               <br />
 

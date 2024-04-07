@@ -72,7 +72,8 @@ exports.loginTechnician = async (req, res) => {
             res.status(200).json({
                 message: 'Login successful',
                 data: results,
-                user_type: 'technician'
+                user_type: 'technician',
+                // user_field: field
             });
         });
 

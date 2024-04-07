@@ -78,10 +78,12 @@ exports.setup = (database) => {
 
 exports.getAllComplaints = async (req, res) => {
     try {
-        // const { user_type, tech_id } = req.body;
-        const tech_id = 110002;
-        const tech_type = "computer"; // Hardcoded for testing
-        user_type = "technician";
+        const { user_type, tech_id ,tech_type} = req.query;
+        // console.log( { user_type, tech_id ,tech_type});
+        
+        // const tech_id = 110002;
+        // const tech_type = "computer"; // Hardcoded for testing
+        // user_type = "technician";
 
         if (user_type === "technician") {
             let DEVICE_TABLE_NAME;
@@ -103,10 +105,10 @@ exports.getAllComplaints = async (req, res) => {
             }
 
             const get_complaints_query = `
-                SELECT dc.token_id, dc.description, dc.${DEVICE_ID}, dc.complaint_date, dt.Company, dc.student_id ,dc.resolved_date,dc.tech_id
+                SELECT dc.token_id, dc.description, dc.${DEVICE_ID} as device_id, dc.complaint_date, dt.Company, dc.student_id ,dc.resolved_date,dc.tech_id
                 FROM ${DEVICE_COMPLAINTS} dc 
                 JOIN ${DEVICE_TABLE_NAME} dt ON dc.${DEVICE_ID} = dt.${DEVICE_ID} 
-                WHERE (dc.tech_id IS NULL or dc.tech_id= ? ) AND dc.admin_approval = true;
+                WHERE  dc.admin_approval = true;
             `;
 
             connection.query(get_complaints_query, [tech_id], (err, results) => {
@@ -115,7 +117,7 @@ exports.getAllComplaints = async (req, res) => {
                     return res.status(500).json({ error: 'Internal server error' });
                 }
 
-                // console.log('Retrieved complaints:', results); // Add logging here to see the results
+                console.log('Retrieved complaints:', results); // Add logging here to see the results
 
                 return res.status(200).json({
                     data: results
