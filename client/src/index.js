@@ -17,8 +17,7 @@ import Login from './Pages/Login';
 import AddDevices from './Pages/Faculty_AddElements/AddDevices';
 import AddStaff from './Pages/Faculty_AddElements/AddStaff';
 import Pay from './Pages/Pay';
-import UpdateDevies from './Pages/Faculty_AddElements/UpdateDevices';
-import UpdateStaff from './Pages/Faculty_AddElements/UpdateStaff';
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -54,14 +53,6 @@ const allRoutes = createBrowserRouter([
   {
     path: '/addstaff',
     element: <AddStaff />
-  },
-  {
-    path: '/updatedevices',
-    element: <UpdateDevies />
-  },
-  {
-    path: '/updatestaff',
-    element: <UpdateStaff />
   },
   {
     path: "/chat",

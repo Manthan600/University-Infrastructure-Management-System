@@ -115,7 +115,7 @@ exports.getAllComplaints = async (req, res) => {
                     return res.status(500).json({ error: 'Internal server error' });
                 }
 
-                console.log('Retrieved complaints:', results); // Add logging here to see the results
+                // console.log('Retrieved complaints:', results); // Add logging here to see the results
 
                 return res.status(200).json({
                     data: results

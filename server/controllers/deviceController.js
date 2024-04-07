@@ -31,7 +31,7 @@ exports.addDevice = (req, res) => {
         let device_id;
 
         const deviceTable = device_type === 'computer' ? 'computer' : (device_type === 'ac' ? 'ac' : 'projector');
-        console.log(deviceTable);
+        // console.log(deviceTable);
         // Fetch the last inserted comp_id
         if (device_type === 'computer') {
             device_id = 'comp_id';

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import 'tailwindcss/tailwind.css'; // Import Tailwind CSS styles
 import './login.css'
-
+import AboutUs from "./AboutUs";
 
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -36,7 +36,7 @@ const UserLogin = () => {
         "http://localhost:4000/api/v1/loginUser",
         { username, password }
       );
-      console.log(response.data);
+      // console.log(response.data);
       const userID = response.data.data[0].mis;
       const name = response.data.data[0].name;
 
@@ -52,7 +52,7 @@ const UserLogin = () => {
       sessionStorage.setItem("isLogin", true);
 
 
-
+        
       // Navigate to home if user_type is 'normal'
       if (user_type === "normal") {
         navigate("/student");
@@ -139,7 +139,7 @@ const TechnicianLogin = () => {
         "http://localhost:4000/api/v1/loginTechnician",
         { username, password }
       );
-      console.log(response.data);
+      // console.log(response.data);
       const userID = response.data.data[0].tech_id;
       const name = response.data.data[0].name;
       const user_type = 'technician';
@@ -229,7 +229,7 @@ const AccountSection = () => {
         "http://localhost:4000/api/v1/loginAccountSection",
         { username, password }
       );
-      console.log(response.data);
+     // console.log(response.data);
       const userID = response.data.data[0].username;
       const name = response.data.data[0].name;
       const user_type ='accounts';
@@ -319,7 +319,7 @@ const FacultyLogin = () => {
         "http://localhost:4000/api/v1/loginAdmin",
         { username, password }
       );
-      console.log(response.data);
+     // console.log(response.data);
       const userID = response.data.data[0].username;
       const name = response.data.data[0].name;
       const user_type = 'admin';
@@ -470,6 +470,14 @@ const Login = () => {
                 } hover:text-pink-600 transition-all duration-300`}
               >
                 Faculty
+              </button>
+              <button
+                onClick={() => navigate('/about')}
+                className={`link ml-5 ${
+                  activeLink === "faculty" && "underline"
+                } hover:text-pink-600 transition-all duration-300`}
+              >
+                AboutUs
               </button>
           </Nav>
 
