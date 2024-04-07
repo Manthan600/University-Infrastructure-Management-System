@@ -26,7 +26,7 @@ export default function Student() {
   const getStudentComplaints = async () => {
     try {
       const response = await axios.post('http://localhost:4000/api/v1/getStudentComplaints', { student_id: sessionStorage.getItem('userID') });
-      console.log('Server response:', response.data);
+           // console.log(response.data);
 
       setStudentComplaints(response.data.data);
     } catch (error) {
@@ -71,13 +71,15 @@ export default function Student() {
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
+    getStudentComplaints(sessionStorage.getItem('userID'));
+
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:4000/api/v1/registerComplaints', formData);
-      console.log('Server response:', response.data);
+     // console.log(response.data);
 
       setShowErrorAlert404(false);
       setShowErrorAlert500(false);
