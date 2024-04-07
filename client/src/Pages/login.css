@@ -118,6 +118,12 @@
   padding: 5px 10px;
 }
 
+/* @media(max-width:1220px){
+  .link{
+     font-size: 14px;
+  }
+} */
+
 .active {
   text-decoration: underline;
 }

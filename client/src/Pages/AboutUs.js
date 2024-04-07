@@ -2,6 +2,8 @@ import React from 'react';
 import Header from '../common/Header';
 import abtImage from '../images/abt.jpg'; // Require the image
 import personImage from '../images/person.png'; // Require the image
+import superhero from '../images/superhero.png'; // Require the image
+import superhero1 from '../images/superhero1.png'; // Require the image
 import './AboutUs.css'
 
 export default function AboutUs() {
@@ -13,7 +15,7 @@ export default function AboutUs() {
         <div className="left">
             <img src={abtImage} alt="abt" />
         </div>
-        <div className="right">
+        <div className="right text-black">
             <h3>About our project &gt;&gt; </h3>
             <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Culpa, dolores. Odio possimus officia, itaque illo quae praesentium quo deleniti aliquid ratione dicta eligendi amet obcaecati perferendis est tempore assumenda voluptatibus incidunt doloremque beatae consequatur ex consequuntur nobis adipisci. Blanditiis voluptatem officiis, ullam quaerat beatae nesciunt tempora at nisi temporibus sit.</p>
             <div className="git">
@@ -25,7 +27,7 @@ export default function AboutUs() {
 
 
         <h2>Contributors</h2>
-      <div className="contri">
+      <div className="contri flex flex-wrap bg-black">
 
         <div className="person">
             <div className="Pimg">
@@ -40,7 +42,7 @@ export default function AboutUs() {
         
         <div className="person">
             <div className="Pimg">
-            <img src={personImage} alt="person" />
+            <img src={superhero} alt="person" />
             </div>
             <div className="info">
             <h3>Sanchit Rajmane</h3>

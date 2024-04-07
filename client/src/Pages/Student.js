@@ -76,7 +76,8 @@ export default function Student() {
         "http://localhost:4000/api/v1/registerComplaints",
         formData
       );
-      // console.log("Server response:", response.data);
+      // console.log("Server response:", response.data)
+      ;
 
       setShowErrorAlert404(false);
       setShowErrorAlert500(false);
@@ -195,6 +196,7 @@ export default function Student() {
             </div>
 
             <div className="complaint">
+            <div className="table-responsive">
               <form onSubmit={handleSubmit}>
                 <div>
                   <label className="text-black">MIS:</label>
@@ -273,6 +275,7 @@ export default function Student() {
                   </button>
                 </div>
               </form>
+              </div>
             </div>
           </div>
 

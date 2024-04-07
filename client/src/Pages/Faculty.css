@@ -66,6 +66,11 @@
   /* For smaller screens */
   .table-responsive table {
     font-size: 12px; /* Adjust font size for smaller screens */
+    width: 100%; /* Adjust table width for smaller screens */
+  }
+
+  .navbar-brand {
+    font-size: 18px; /* Decrease font size for smaller screens */
   }
 }
 
@@ -73,6 +78,11 @@
   /* For tablets */
   .table-responsive table {
     font-size: 14px; /* Adjust font size for tablets */
+    width: 100%; /* Adjust table width for tablets */
+  }
+
+  .navbar-brand {
+    font-size: 22px; /* Adjust font size for tablets */
   }
 }
 
@@ -80,6 +90,10 @@
   /* For laptops/desktops */
   .table-responsive table {
     font-size: 16px; /* Default font size for laptops/desktops */
+  }
+
+  .navbar-brand {
+    font-size: 25px; /* Restore font size for laptops/desktops */
   }
 }
 

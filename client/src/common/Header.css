@@ -35,7 +35,7 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-size: 22px; /* Increase font size for laptop screens */
-  margin-right: 4em;
+  /* margin-right: 4em; */
 }
 
 .link {

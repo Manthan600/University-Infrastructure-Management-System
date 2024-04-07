@@ -29,8 +29,13 @@ export default function Technician() {
 
   const getAllComplaints = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/api/v1/getAllComplaints');
+      const response = await axios.get('http://localhost:4000/api/v1/getAllComplaints',{ params: {
+        user_type: sessionStorage.getItem('user_type'),
+        tech_id : sessionStorage.getItem('userID'),
+        tech_type: sessionStorage.getItem('tech_type')
+      }});
       const { data } = response.data;
+      console.log(data);
       setOngoingComplaints(data.filter(complaint => !complaint.tech_id));
       setAcceptedComplaints(data.filter(complaint => complaint.tech_id && !complaint.resolved_date ));
       // console.log(acceptedComplaints);
@@ -42,7 +47,7 @@ export default function Technician() {
 
   const handleAcceptComplaint = async (token_id) => {
     try {
-      const response = await axios.post('http://localhost:4000/api/v1/acceptComplaints', { token_id, tech_id: 110002, tech_type: 'computer', user_type: 'technician' });
+      const response = await axios.post('http://localhost:4000/api/v1/acceptComplaints', { token_id, tech_id:sessionStorage.getItem("userID"), tech_type:sessionStorage.getItem("tech_type"), user_type: 'technician' });
       // console.log('Complaint accepted:', response.data);
       setShowAlert(true);
       getAllComplaints();
@@ -56,8 +61,7 @@ export default function Technician() {
 
   const handleResolveComplaint = async (token_id) => {
     try {
-      let tech_id = 110002;
-      const response = await axios.post('http://localhost:4000/api/v1/resolveComplaints', { tech_id,token_id, tech_type: 'computer', user_type: 'technician' });
+      const response = await axios.post('http://localhost:4000/api/v1/resolveComplaints', { tech_id:sessionStorage.getItem('userID'),token_id, tech_type:sessionStorage.getItem('tech_type'), user_type: 'technician' });
       // console.log('Complaint resolved:', response.data);
       setShowAlert(true);
       getAllComplaints();
@@ -71,15 +75,16 @@ export default function Technician() {
   return (
     <div>
       <Header />
-      <h2>Welcome Technician!</h2>
+      <h2 class="gradient-text_b">Welcome Technician!</h2>
       <div className="box">
         <div className="head">
-          <h2>Handle complaints</h2>
-          <h3>Technician-ID</h3>
+          <h2 class="gradient-text_b">Handle complaints</h2>
+          <h3 class="gradient-text_r">{sessionStorage.getItem("userID")}: {sessionStorage.getItem("name")}</h3>
         </div>
 
         <div className="complaint">
-          <label htmlFor="device">Ongoing Complaints :</label>
+          <label htmlFor="device" className="text-black">Ongoing Complaints :</label>
+          <div className="table-responsive">
           <table className="table table-bordered mb-5">
             <thead>
               <tr>
@@ -101,7 +106,7 @@ export default function Technician() {
             {tech_type === "ac" && <span>{complaint.ac_id}</span>}
             {tech_type === "projectors" && <span>{complaint.proj_id}</span>}
           </td> */}
-                  <td>{complaint.comp_id}</td>
+                  <td>{complaint.device_id}</td>
                   <td>{complaint.description}</td>
                   <td>{new Date(complaint.complaint_date).toISOString().split('T')[0]}</td>
                   <td className="text-center">
@@ -112,8 +117,10 @@ export default function Technician() {
 
             </tbody>
           </table>
+          </div>
 
-          <label htmlFor="">Accepted Complaints :</label>
+          <label htmlFor="" className="text-black">Accepted Complaints :</label>
+          <div className="table-responsive">
           <table className="table table-bordered mb-5">
             <thead>
               <tr>
@@ -141,8 +148,10 @@ export default function Technician() {
               ))}
             </tbody>
           </table>
+          </div>
 
-          <label htmlFor="">Resolved Complaints :</label>
+          <label htmlFor="" className="text-black">Resolved Complaints :</label>
+          <div className="table-responsive">
           <table className="table table-bordered mb-5">
             <thead>
               <tr>
@@ -167,6 +176,7 @@ export default function Technician() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
       <Alert show={showAlert} variant="success" style={{ position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999' }}>

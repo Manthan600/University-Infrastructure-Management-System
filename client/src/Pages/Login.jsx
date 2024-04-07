@@ -8,7 +8,7 @@ import { faInstitution } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import "../common/Header.css";
 
-const UserLogin = ({ userType}) => {
+const UserLogin = ({ userType }) => {
   const [showImage, setShowImage] = useState(true);
   const [hideImage, setHideImage] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
@@ -32,29 +32,36 @@ const UserLogin = ({ userType}) => {
         { username, password }
       );
       // console.log(response.data);
-      const userID = response.data.data[0].mis;
+
       const name = response.data.data[0].name;
       const user_type = response.data.user_type;
 
       console.log("Login successful");
 
       // Save mis and name to sessionStorage
-      sessionStorage.setItem("userID", userID);
       sessionStorage.setItem("name", name);
       sessionStorage.setItem("user_type", user_type);
       sessionStorage.setItem("isLogin", true);
-
+      let userID;
       // Navigate to home if user_type is 'normal'
       if (user_type === "normal") {
+        userID = response.data.data[0].mis;
+        sessionStorage.setItem("userID", userID);
+
         navigate("/student");
-      }
-      else if (user_type ==="admin") {
+      } else if (user_type === "admin") {
+        userID = response.data.data[0].username;
+        sessionStorage.setItem("userID", userID);
         navigate("/faculty");
-      }
-      else if (user_type ==="technician") {
+      } else if (user_type === "technician") {
+        userID = response.data.data[0].tech_id;
+        let tech_type = response.data.data[0].field;
+        sessionStorage.setItem("userID", userID);
+        sessionStorage.setItem("tech_type", tech_type);
         navigate("/tech");
-      }
-      else if (user_type ==="accounts") {
+      } else if (user_type === "accounts") {
+        userID = response.data.data[0].username;
+        sessionStorage.setItem("userID", userID);
         navigate("/acc");
       }
     } catch (error) {
@@ -99,7 +106,10 @@ const UserLogin = ({ userType}) => {
         </div>
       )}
       {showLogin && (
-        <div className="container-fluid h-custom" style={{marginTop:'7rem' ,marginLeft:'4rem'}}>
+        <div
+          className="container-fluid h-custom"
+          style={{ marginTop: "7rem", marginLeft: "4rem" }}
+        >
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-md-9 col-lg-6 col-xl-5">
               <img
@@ -110,7 +120,7 @@ const UserLogin = ({ userType}) => {
             </div>
             <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1 ">
               <h2 className="text-4xl text-center font-bold mt-0 p-0 text-red-500">
-              {userType} Login
+                {userType} Login
               </h2>
               <form>
                 <div className="mb-4">
@@ -137,11 +147,9 @@ const UserLogin = ({ userType}) => {
                     required
                   />
                 </div>
-               {/* adding error messge */}
+                {/* adding error messge */}
                 {errorMsg && (
-                  <p className="text-red-500 text-xs italic">
-                    {errorMsg}
-                  </p>
+                  <p className="text-red-500 text-xs italic">{errorMsg}</p>
                 )}
 
                 <div className="flex items-center justify-center mt-6">
@@ -161,7 +169,6 @@ const UserLogin = ({ userType}) => {
     </>
   );
 };
-
 
 const Login = () => {
   const [activeLink, setActiveLink] = useState("user");
@@ -233,10 +240,8 @@ const Login = () => {
         </Container>
       </Navbar>
 
-
       <div className="container m-0 p-0">
         {<UserLogin userType={activeLink} />}
-        
       </div>
     </>
   );

@@ -606,6 +606,7 @@ exports.addACModel = async (req, res) => {
 
 exports.addDevice = async (req, res) => {
     try {
+        console.log("inside addDevice")
         const { no_of_devices, device_type, user_type, device_info } = req.body;
         const data =  { no_of_devices, device_type, user_type, device_info };
         let user = 'admin'
@@ -639,7 +640,7 @@ exports.addDevice = async (req, res) => {
             // Start transaction
             connection.beginTransaction(async (err) => {
                 if (err) throw err;
-                
+                console.log(no_of_devices);
                 for (let i = 0; i < no_of_devices; i++) {
                     try {
                         const insertResult = await connection.query(insertDeviceQuery, [device_info.model_id, device_info.Room_id, device_info.Company, device_info.DOI, device_info.status]);
@@ -647,6 +648,7 @@ exports.addDevice = async (req, res) => {
                         
                         // Generate QR code for each device
                         const url = `http://localhost:4000/api/v1/registerComplaintQR?device_id=${insertResult.insertId}&device_type=${device_type}`;
+                        console.log( insertResult);
                         const filename = `./qrcodes/${device_type}${insertResult.insertId}.png`;
                         generateQRCode(url, filename);
                     } catch (insertError) {
