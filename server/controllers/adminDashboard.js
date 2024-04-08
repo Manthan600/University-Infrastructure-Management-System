@@ -188,12 +188,12 @@ exports.approveComplaint = async (req, res) => {
                         return res.status(500).json({ error: 'Internal server error' });
                     }
 
-                console.log('Retrieved complaints:', results); // Add logging here to see the results
+                    console.log('Retrieved complaints:', results); // Add logging here to see the results
 
-            });
-        })
+                });
+            })
 
-    }
+        }
     }
     catch (err) {
         console.error(err);
@@ -283,7 +283,7 @@ exports.deleteComp = async (req, res) => {
             }
 
             delete_dev_query = `DELETE FROM ${DEVICE_TABLE_NAME} WHERE ${DEVICE_ID}= ?;`;
-            connection.query(delete_dev_query,[device_id],  (err, results) => {
+            connection.query(delete_dev_query, [device_id], (err, results) => {
                 if (err) {
                     console.error('Error deleting device: ' + err.stack);
                     return res.status(500).json({ error: 'Internal server error' });
@@ -335,7 +335,7 @@ exports.deleteProj = async (req, res) => {
             }
 
             delete_dev_query = `DELETE FROM ${DEVICE_TABLE_NAME} WHERE ${DEVICE_ID}= ?;`;
-            connection.query(delete_dev_query,[device_id],  (err, results) => {
+            connection.query(delete_dev_query, [device_id], (err, results) => {
                 if (err) {
                     console.error('Error deleting device: ' + err.stack);
                     return res.status(500).json({ error: 'Internal server error' });
@@ -388,7 +388,7 @@ exports.deleteAc = async (req, res) => {
             }
 
             delete_dev_query = `DELETE FROM ${DEVICE_TABLE_NAME} WHERE ${DEVICE_ID}= ?;`;
-            connection.query(delete_dev_query,[device_id],  (err, results) => {
+            connection.query(delete_dev_query, [device_id], (err, results) => {
                 if (err) {
                     console.error('Error deleting device: ' + err.stack);
                     return res.status(500).json({ error: 'Internal server error' });
@@ -576,7 +576,7 @@ exports.addACModel = async (req, res) => {
 //                     const url = `http://localhost:4000/api/v1/registerComplaintQR?device_id=${insertDeviceResults.insertId}&device_type=${device_type}`
 //                     const filename = `./qrcodes/${device_type}${insertDeviceResults.insertId}.png`;
 //                     generateQRCode(url, filename);
-                    
+
 //                 });
 //             }
 //             return res.status(200).json({
@@ -600,17 +600,15 @@ exports.addACModel = async (req, res) => {
 //             message: err.message
 //         })
 //     }
-    
+
 // }
 
 
 exports.addDevice = async (req, res) => {
     try {
-        console.log("inside addDevice")
         const { no_of_devices, device_type, user_type, device_info } = req.body;
-        const data =  { no_of_devices, device_type, user_type, device_info };
-        let user = 'admin'
-        if (user=== "admin") {
+        const data = { no_of_devices, device_type, user_type, device_info };
+        if (user_type == "admin" || "normal " || "technician" || "") {
             let DEVICE_TABLE_NAME;
             let DEVICE_ID;
             let DEVICE_COMPLAINTS;
@@ -635,61 +633,50 @@ exports.addDevice = async (req, res) => {
                 DEVICE_MODELS = "proj_model";
             }
 
-            const insertDeviceQuery = `INSERT INTO ${DEVICE_TABLE_NAME} (model_id, Room_id, Company, DOI, status) VALUES (?, ?, ?, ?, ?)`;
-            
-            // Start transaction
-            connection.beginTransaction(async (err) => {
-                if (err) throw err;
-                console.log(no_of_devices);
-                for (let i = 0; i < no_of_devices; i++) {
-                    try {
-                        const insertResult = await connection.query(insertDeviceQuery, [device_info.model_id, device_info.Room_id, device_info.Company, device_info.DOI, device_info.status]);
-                        console.log('Device inserted successfully:', device_info);
-                        
-                        // Generate QR code for each device
-                        const url = `http://localhost:4000/api/v1/registerComplaintQR?device_id=${insertResult.insertId}&device_type=${device_type}`;
-                        console.log( insertResult);
-                        const filename = `./qrcodes/${device_type}${insertResult.insertId}.png`;
-                        generateQRCode(url, filename);
-                    } catch (insertError) {
-                        console.error('Error inserting device:', insertError);
-                        // Rollback transaction on error
-                        connection.rollback(() => {
-                            console.log('Transaction rolled back.');
-                        });
+            const insertDeviceQuery = `INSERT INTO ${DEVICE_TABLE_NAME} ( model_id, Room_id, Company, DOI, status) VALUES ( ?, ?, ?, ?, ?)`;
+            for (i = 0; i < no_of_devices; i++) {
+                connection.query(insertDeviceQuery, [device_info.model_id, device_info.Room_id, device_info.Company, device_info.DOI, device_info.status], (err, insertDeviceResults) => {
+                    if (err) {
+                        console.error('Error inserting complaint: ' + err.stack);
+                        console.log(err.message);
                         return res.status(500).json({ error: 'Internal server error' });
                     }
-                }
-                
-                // Commit transaction if all devices inserted successfully
-                connection.commit((commitError) => {
-                    if (commitError) {
-                        console.error('Error committing transaction:', commitError);
-                        return res.status(500).json({ error: 'Internal server error' });
-                    }
-                    console.log('Transaction committed.');
-                    return res.status(200).json({ message: 'Products added successfully' });
+                    const url = `http://localhost:3000/qrcode/${insertDeviceResults.insertId}/${device_type}`
+                    const filename = `./qrcodes/${device_type}${insertDeviceResults.insertId}.png`;
+                    generateQRCode(url, filename);
+
                 });
-            });
+            }
+            return res.status(200).json({
+                message: "Products added successfully",
+                data: data
+            })
         }
         else {
-            console.log("Only admins can access");
-            res.status(401).json({ message: 'Only admins can access' });
+            console.log("only admis can access")
+            res.status(401).json({
+                message: 'Only admins can access'
+            })
         }
     }
     catch (err) {
         console.error(err);
-        res.status(500).json({ success: false, data: 'Internal server error', message: err.message });
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error ',
+            message: err.message
+        })
     }
-};
 
+}
 
 exports.getAllDevices = async (req, res) => {
     try {
         const { user_type } = req.query;
 
         if (user_type === "admin") {
-       
+
             // const get_devices_query = `
             //     SELECT *
             //     FROM ${DEVICE_TABLE_NAME}  
@@ -762,7 +749,7 @@ exports.rooms = async (req, res) => {
         // device_type='computer'
 
         if (user_type === "admin") {
-           
+
             const get_rooms_query = `
             SELECT * FROM rooms;
             `;
@@ -773,7 +760,7 @@ exports.rooms = async (req, res) => {
                     return res.status(500).json({ error: 'Internal server error' });
                 }
 
-             //   console.log('Retrieved All rooms:', results); // Add logging here to see the results
+                //   console.log('Retrieved All rooms:', results); // Add logging here to see the results
 
                 return res.status(200).json({
                     data: results
@@ -797,8 +784,8 @@ exports.models = async (req, res) => {
     try {
         const { device_type, user_type } = req.body;
         // For testing, user_type hardcoded to "admin"
-        user_type = "admin";
-        
+        // user_type = "admin";
+
         if (user_type === "admin") {
             let modelName;
             if (device_type === "computer") {
@@ -810,7 +797,7 @@ exports.models = async (req, res) => {
             } else {
                 return res.status(400).json({ error: 'Bad Request', message: 'Invalid device type' });
             }
-           
+
             const get_models_query = `
                 SELECT * FROM ${modelName};
             `;
@@ -821,7 +808,7 @@ exports.models = async (req, res) => {
                     return res.status(500).json({ error: 'Internal server error' });
                 }
 
-             //   console.log('Retrieved models:', results); // Add logging here to see the results
+                //   console.log('Retrieved models:', results); // Add logging here to see the results
 
                 return res.status(200).json({
                     data: results
@@ -873,8 +860,8 @@ exports.getAllUsers = async (req, res) => {
                     data: {
                         students: students,
                         technicians: technicians,
-                        admin : admin,
-                        account_section : account_section
+                        admin: admin,
+                        account_section: account_section
                     }
                 });
             });
@@ -1034,7 +1021,7 @@ exports.addStaff = async (req, res) => {
                             // MIS is unique, proceed with inserting the new student record
                             insertQuery = 'INSERT INTO students (MIS, password, name, branch, contact_no) VALUES (?, ?, ?, ?, ?)';
                             values = [data.MIS, data.password, data.name, data.branch, data.contact_no];
-                            
+
                             // Execute the insert query
                             connection.query(insertQuery, values, (err, result) => {
                                 if (err) {
@@ -1065,8 +1052,8 @@ exports.addStaff = async (req, res) => {
                         } else {
                             // Technician ID is unique, proceed with inserting the new technician record
                             insertQuery = 'INSERT INTO technicians (tech_id, password, name, contact_no, address, city, zip, field , email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                            values = [data.tech_id, data.password, data.name, data.contact_no, data.address, data.city, data.zip, data.field , data.email];
-                            
+                            values = [data.tech_id, data.password, data.name, data.contact_no, data.address, data.city, data.zip, data.field, data.email];
+
                             // Execute the insert query
                             connection.query(insertQuery, values, (err, result) => {
                                 if (err) {
@@ -1098,7 +1085,7 @@ exports.addStaff = async (req, res) => {
                             // Username is unique, proceed with inserting the new admin record
                             insertQuery = 'INSERT INTO admin (name, username, password) VALUES (?, ?, ?)';
                             values = [data.name, data.username, data.password];
-                            
+
                             // Execute the insert query
                             connection.query(insertQuery, values, (err, result) => {
                                 if (err) {
@@ -1111,7 +1098,7 @@ exports.addStaff = async (req, res) => {
                         }
                     });
                     break;
-                
+
                 case 'account_section':
                     tableName = 'account_section';
                     // Query to check if username already exists in the database
@@ -1131,7 +1118,7 @@ exports.addStaff = async (req, res) => {
                             // Username is unique, proceed with inserting the new admin record
                             insertQuery = 'INSERT INTO account_section (name, username, password) VALUES (?, ?, ?)';
                             values = [data.name, data.username, data.password];
-                            
+
                             // Execute the insert query
                             connection.query(insertQuery, values, (err, result) => {
                                 if (err) {
@@ -1167,36 +1154,36 @@ exports.deleteStudent = async (req, res) => {
 
         if (user === "admin") {
 
-     
-                            // MIS is unique, proceed with inserting the new student record
-                            let deleteQuery = 'DELETE FROM students WHERE MIS= ?'
-                            connection.query(deleteQuery, [MIS], (err, results) => {
-                                if (err) {
-                                    console.error('Error Deleting User: ' + err.stack);
-                                    return res.status(500).json({ error: 'Internal server error' });
-                                }
-                
-                                console.log('Retrieved User:', results); // Add logging here to see the results
-                
-                                return res.status(200).json({
-                                    data: results,
-                                    message: `User with ${MIS} Delted successfully.`
-                
-                                });
-                            });
-                        }
-                    }
-                    catch (err) {
-                        console.error(err);
-                        console.log(err);
-                        res.status(500).json({
-                            success: false,
-                            data: 'Internal server error ',
-                            message: err.message
-                        });
-                    }
-                };
-                
+
+            // MIS is unique, proceed with inserting the new student record
+            let deleteQuery = 'DELETE FROM students WHERE MIS= ?'
+            connection.query(deleteQuery, [MIS], (err, results) => {
+                if (err) {
+                    console.error('Error Deleting User: ' + err.stack);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+
+                console.log('Retrieved User:', results); // Add logging here to see the results
+
+                return res.status(200).json({
+                    data: results,
+                    message: `User with ${MIS} Delted successfully.`
+
+                });
+            });
+        }
+    }
+    catch (err) {
+        console.error(err);
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error ',
+            message: err.message
+        });
+    }
+};
+
 
 exports.deleteTech = async (req, res) => {
     try {
@@ -1205,36 +1192,36 @@ exports.deleteTech = async (req, res) => {
 
         if (user === "admin") {
 
-     
-                            // MIS is unique, proceed with inserting the new student record
-                            let deleteQuery = 'DELETE FROM technicians WHERE tech_id= ?'
-                            connection.query(deleteQuery, [tech_id], (err, results) => {
-                                if (err) {
-                                    console.error('Error Deleting User: ' + err.stack);
-                                    return res.status(500).json({ error: 'Internal server error' });
-                                }
-                
-                                console.log('Retrieved User:', results); // Add logging here to see the results
-                
-                                return res.status(200).json({
-                                    data: results,
-                                    message: `User with ${tech_id} Delted successfully.`
-                
-                                });
-                            });
-                        }
-                    }
-                    catch (err) {
-                        console.error(err);
-                        console.log(err);
-                        res.status(500).json({
-                            success: false,
-                            data: 'Internal server error ',
-                            message: err.message
-                        });
-                    }
-                };
-                
+
+            // MIS is unique, proceed with inserting the new student record
+            let deleteQuery = 'DELETE FROM technicians WHERE tech_id= ?'
+            connection.query(deleteQuery, [tech_id], (err, results) => {
+                if (err) {
+                    console.error('Error Deleting User: ' + err.stack);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+
+                console.log('Retrieved User:', results); // Add logging here to see the results
+
+                return res.status(200).json({
+                    data: results,
+                    message: `User with ${tech_id} Delted successfully.`
+
+                });
+            });
+        }
+    }
+    catch (err) {
+        console.error(err);
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error ',
+            message: err.message
+        });
+    }
+};
+
 
 exports.deleteAdmin = async (req, res) => {
     try {
@@ -1243,36 +1230,36 @@ exports.deleteAdmin = async (req, res) => {
 
         if (user === "admin") {
 
-     
-                            // MIS is unique, proceed with inserting the new student record
-                            let deleteQuery = 'DELETE FROM admin WHERE username= ?'
-                            connection.query(deleteQuery, [username], (err, results) => {
-                                if (err) {
-                                    console.error('Error Deleting User: ' + err.stack);
-                                    return res.status(500).json({ error: 'Internal server error' });
-                                }
-                
-                             //   console.log('Retrieved User:', results); // Add logging here to see the results
-                
-                                return res.status(200).json({
-                                    data: results,
-                                    message: `User with ${username} Delted successfully.`
-                
-                                });
-                            });
-                        }
-                    }
-                    catch (err) {
-                        console.error(err);
-                        console.log(err);
-                        res.status(500).json({
-                            success: false,
-                            data: 'Internal server error ',
-                            message: err.message
-                        });
-                    }
-                };
-                
+
+            // MIS is unique, proceed with inserting the new student record
+            let deleteQuery = 'DELETE FROM admin WHERE username= ?'
+            connection.query(deleteQuery, [username], (err, results) => {
+                if (err) {
+                    console.error('Error Deleting User: ' + err.stack);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+
+                //   console.log('Retrieved User:', results); // Add logging here to see the results
+
+                return res.status(200).json({
+                    data: results,
+                    message: `User with ${username} Delted successfully.`
+
+                });
+            });
+        }
+    }
+    catch (err) {
+        console.error(err);
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error ',
+            message: err.message
+        });
+    }
+};
+
 
 exports.deleteAcc = async (req, res) => {
     try {
@@ -1281,33 +1268,32 @@ exports.deleteAcc = async (req, res) => {
 
         if (user === "admin") {
 
-     
-                            // MIS is unique, proceed with inserting the new student record
-                            let deleteQuery = 'DELETE FROM account_section WHERE username= ?'
-                            connection.query(deleteQuery, [username], (err, results) => {
-                                if (err) {
-                                    console.error('Error Deleting User: ' + err.stack);
-                                    return res.status(500).json({ error: 'Internal server error' });
-                                }
-                
-                                // console.log('Retrieved User:', results); // Add logging here to see the results
-                
-                                return res.status(200).json({
-                                    data: results,
-                                    message: `User with ${username} Delted successfully.`
-                
-                                });
-                            });
-                        }
-                    }
-                    catch (err) {
-                        console.error(err);
-                        console.log(err);
-                        res.status(500).json({
-                            success: false,
-                            data: 'Internal server error ',
-                            message: err.message
-                        });
-                    }
-                };
-                
+
+            // MIS is unique, proceed with inserting the new student record
+            let deleteQuery = 'DELETE FROM account_section WHERE username= ?'
+            connection.query(deleteQuery, [username], (err, results) => {
+                if (err) {
+                    console.error('Error Deleting User: ' + err.stack);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+
+                // console.log('Retrieved User:', results); // Add logging here to see the results
+
+                return res.status(200).json({
+                    data: results,
+                    message: `User with ${username} Delted successfully.`
+
+                });
+            });
+        }
+    }
+    catch (err) {
+        console.error(err);
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error ',
+            message: err.message
+        });
+    }
+};

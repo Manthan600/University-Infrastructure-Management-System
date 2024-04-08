@@ -13,6 +13,7 @@ import AboutUs from './Pages/AboutUs'
 import Technician from './Pages/Technician'
 import Error404 from './Pages/Error404';
 import Login from './Pages/Login';
+import Qrcode from './Pages/QrCode';
 
 import AddDevices from './Pages/Faculty_AddElements/AddDevices';
 import AddStaff from './Pages/Faculty_AddElements/AddStaff';
@@ -61,6 +62,10 @@ const allRoutes = createBrowserRouter([
   {
     path: "/about",
     element: <AboutUs />
+  },
+  {
+    path: "/qrcode/:device_id/:device_type",
+    element: <Qrcode />
   },
   {
     path: '/',
