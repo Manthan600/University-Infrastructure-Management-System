@@ -25,7 +25,7 @@ export default function Student() {
   const getStudentComplaints = async () => {
     try {
       const response = await axios.post('http://localhost:4000/api/v1/getStudentComplaints', { student_id: sessionStorage.getItem('userID') });
-           // console.log(response.data);
+      // console.log(response.data);
 
       setStudentComplaints(response.data.data);
     } catch (error) {
@@ -72,12 +72,15 @@ export default function Student() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(formData);
       const response = await axios.post(
         "http://localhost:4000/api/v1/registerComplaints",
         formData
       );
+      sessionStorage.removeItem("QRdevice_type");
+      sessionStorage.removeItem("QRdevice_id");
       // console.log("Server response:", response.data)
-      ;
+      
 
       setShowErrorAlert404(false);
       setShowErrorAlert500(false);
@@ -196,85 +199,85 @@ export default function Student() {
             </div>
 
             <div className="complaint">
-            <div className="table-responsive">
-              <form onSubmit={handleSubmit}>
-                <div>
-                  <label className="text-black">MIS:</label>
-                  <input
-                    className="inp"
-                    style={{ border: "0" }}
-                    type="text"
-                    name="mis"
-                    value={(formData.userID = sessionStorage.getItem("userID"))}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label className="text-black">Device ID:</label>
-                  <input
-                    className="inp"
-                    type="text"
-                    name="device_id"
-                    value={formData.device_id}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <label className="text-black">Description:</label>
-
-                  <textarea
-                    name="description"
-                    id="description"
-                    cols=""
-                    rows=""
-                    className="description"
-                    value={formData.description}
-                    style={{ height: `${textareaHeight}px` }}
-                    onChange={handleTextareaChange}
-                  ></textarea>
-                </div>
-                <div>
-                  <label className="text-black">User Type:</label>
-                  <input
-                    className="inp"
-                    style={{ border: "0" }}
-                    type="text"
-                    name="user_type"
-                    value={
-                      (formData.user_type = sessionStorage.getItem("user_type"))
-                    }
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="text-black flex">Complaint Type:</label>
+              <div className="table-responsive">
+                <form onSubmit={handleSubmit}>
                   <div>
-                    <select
-                      name="complaint_type"
-                      value={formData.complaint_type}
+                    <label className="text-black">MIS:</label>
+                    <input
+                      className="inp"
+                      style={{ border: "0" }}
+                      type="text"
+                      name="mis"
+                      value={(formData.userID = sessionStorage.getItem("userID"))}
                       onChange={handleChange}
-                      className="custom-select"
-                    >
-                      <option value="">Select Complaint Type</option>
-                      <option value="computer">Computer</option>
-                      <option value="projectors">Projectors</option>
-                      <option value="ac">AC</option>
-                    </select>
+                    />
                   </div>
-                </div>
+                  <div>
+                    <label className="text-black">Device ID:</label>
+                    <input
+                      className="inp"
+                      type="text"
+                      name="device_id"
+                      value={formData.device_id = sessionStorage.getItem("QRdevice_id") ? sessionStorage.getItem("QRdevice_id") : formData.device_id}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-black">Description:</label>
 
-                <br />
-                <br />
-                <div className=" d-flex justify-content-center">
-                  <button class="button-82-pushable " role="button">
-                    <span class="button-82-shadow"></span>
-                    <span class="button-82-edge"></span>
-                    <span class="button-82-front text " onClick={handleSubmit}>
-                      Submit
-                    </span>
-                  </button>
-                </div>
-              </form>
+                    <textarea
+                      name="description"
+                      id="description"
+                      cols=""
+                      rows=""
+                      className="description"
+                      value={formData.description}
+                      style={{ height: `${textareaHeight}px` }}
+                      onChange={handleTextareaChange}
+                    ></textarea>
+                  </div>
+                  <div>
+                    <label className="text-black">User Type:</label>
+                    <input
+                      className="inp"
+                      style={{ border: "0" }}
+                      type="text"
+                      name="user_type"
+                      value={
+                        (formData.user_type = sessionStorage.getItem("user_type"))
+                      }
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="text-black flex">Complaint Type:</label>
+                    <div>
+                      <select
+                        name="complaint_type"
+                        value={formData.complaint_type = sessionStorage.getItem("QRdevice_type") ? sessionStorage.getItem("QRdevice_type") : formData.complaint_type}
+                        onChange={handleChange}
+                        className="custom-select"
+                      >
+                        <option value="">Select Complaint Type</option>
+                        <option value="computer">Computer</option>
+                        <option value="projectors">Projectors</option>
+                        <option value="ac">AC</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <br />
+                  <br />
+                  <div className=" d-flex justify-content-center">
+                    <button class="button-82-pushable " role="button">
+                      <span class="button-82-shadow"></span>
+                      <span class="button-82-edge"></span>
+                      <span class="button-82-front text " onClick={handleSubmit}>
+                        Submit
+                      </span>
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -289,7 +292,7 @@ export default function Student() {
 
           <div className="box">
             <div className="head text-black">
-              <h2  class="gradient-text_b">Check Status</h2>
+              <h2 class="gradient-text_b">Check Status</h2>
               <h3 class="gradient-text_r" >
                 {sessionStorage.getItem("userID")}:{" "}
                 {sessionStorage.getItem("name")}
@@ -325,8 +328,8 @@ export default function Student() {
                       <td>
                         {complaint.resolved_date
                           ? new Date(complaint.resolved_date)
-                              .toISOString()
-                              .split("T")[0]
+                            .toISOString()
+                            .split("T")[0]
                           : "--"}
                       </td>
                       <td>{complaint.tech_id ? complaint.tech_id : "--"}</td>
