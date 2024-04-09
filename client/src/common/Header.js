@@ -23,7 +23,7 @@ export default function Header() {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
+  sessionStorage.getItem("user_type")
   return (
     <div sticky="top">
       <Navbar expand="lg" className="navbar" variant="dark" sticky="top">

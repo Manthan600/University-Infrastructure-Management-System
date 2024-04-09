@@ -47,21 +47,24 @@ const UserLogin = ({ userType }) => {
       if (user_type === "normal") {
         userID = response.data.data[0].mis;
         sessionStorage.setItem("userID", userID);
-
+        sessionStorage.setItem("user_type",user_type );
         navigate("/student");
       } else if (user_type === "admin") {
         userID = response.data.data[0].username;
         sessionStorage.setItem("userID", userID);
+        sessionStorage.setItem("user_type",user_type );
         navigate("/faculty");
       } else if (user_type === "technician") {
         userID = response.data.data[0].tech_id;
         let tech_type = response.data.data[0].field;
         sessionStorage.setItem("userID", userID);
         sessionStorage.setItem("tech_type", tech_type);
+        sessionStorage.setItem("user_type",user_type );
         navigate("/tech");
       } else if (user_type === "accounts") {
         userID = response.data.data[0].username;
         sessionStorage.setItem("userID", userID);
+        sessionStorage.setItem("user_type",user_type );
         navigate("/acc");
       }
     } catch (error) {
@@ -94,78 +97,90 @@ const UserLogin = ({ userType }) => {
 
   return (
     <>
-      {showImage && (
-        <div className={`image ${hideImage ? "slide-up" : ""}`}>
-          <button
-            className="button-29"
-            role="button"
-            onClick={handleButtonClick}
+      <div className="login-container">
+        {showImage && (
+          <div className={`image ${hideImage ? "slide-up" : ""}`}>
+            <button
+              className="button-29"
+              role="button"
+              onClick={handleButtonClick}
+            >
+              Welcome back {userType}!
+            </button>
+          </div>
+        )}
+        {showLogin && (
+          <div
+            className="container-fluid h-custom"
+            style={{ marginTop: "7rem", marginLeft: "4rem" }}
           >
-            Welcome back {userType}!
-          </button>
-        </div>
-      )}
-      {showLogin && (
-        <div
-          className="container-fluid h-custom"
-          style={{ marginTop: "7rem", marginLeft: "4rem" }}
-        >
-          <div className="row d-flex justify-content-center align-items-center h-100">
-            <div className="col-md-9 col-lg-6 col-xl-5">
-              <img
-                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                className="img-fluid"
-                alt="Sample image"
-              />
-            </div>
-            <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1 ">
-              <h2 className="text-4xl text-center font-bold mt-0 p-0 text-red-500">
-                {userType} Login
-              </h2>
-              <form>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-900">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    className="mt-1 p-2 w-full border rounded-md form-control form-control-lg"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-900">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className="mt-1 p-2 w-full border rounded-md form-control form-control-lg"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                {/* adding error messge */}
-                {errorMsg && (
-                  <p className="text-red-500 text-xs italic">{errorMsg}</p>
-                )}
+            <div className="row d-flex justify-content-center align-items-center h-100">
+              <div className="col-md-9 col-lg-6 col-xl-5">
+                {/* <img
+                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                  className="img-fluid"
+                  alt="Sample image"
+                /> */}
 
-                <div className="flex items-center justify-center mt-6">
-                  <button
-                    type="button"
-                    onClick={handleLogin}
-                    className="btn btn-primary btn-lg px-6 py-2 rounded-md hover:bg-green-900 transition-all duration-300"
-                  >
-                    Login
-                  </button>
+                <div className="embed-responsive embed-responsive-4by3 text-2xl">
+                  <iframe
+                  id="myiframe"
+                    className="embed-responsive-item"
+                    src="https://lottie.host/embed/3ce855b8-e242-419d-a029-2e778db903e9/1N4OVze4bW.json"
+                    title="Responsive iframe"
+                    allowFullScreen
+                  />
                 </div>
-              </form>
+              </div>
+              <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1 ">
+                <h2 className="text-4xl text-center font-bold mt-0 p-0 text-red-500">
+                  {userType} Login
+                </h2>
+                <form>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-900">
+                      Username
+                    </label>
+                    <input
+                      type="text"
+                      className="mt-1 p-2 w-full border rounded-md form-control form-control-lg"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-900">
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      className="mt-1 p-2 w-full border rounded-md form-control form-control-lg"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  {/* adding error messge */}
+                  {errorMsg && (
+                    <p className="text-red-500 text-xs italic">{errorMsg}</p>
+                  )}
+
+                  <div className="flex items-center justify-center mt-6">
+                    <button
+                      type="button"
+                      onClick={handleLogin}
+                      className="btn btn-primary btn-lg px-6 py-2 rounded-md hover:bg-green-900 transition-all duration-300"
+                    >
+                      Login
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 };
@@ -173,21 +188,25 @@ const UserLogin = ({ userType }) => {
 const Login = () => {
   const [activeLink, setActiveLink] = useState("user");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
-    setMenuOpen(false);
-  };
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setExpanded(false); // Collapse the navbar after selecting an option
   };
 
   return (
     <>
-      <Navbar className="navbar" data-bs-theme="dark" sticky="top">
+      <Navbar
+        collapseOnSelect
+        expand="lg"
+        className="navbar"
+        variant="dark"
+        sticky="top"
+        expanded={expanded}
+      >
         <Container>
           <FontAwesomeIcon
             icon={faInstitution}
@@ -199,44 +218,54 @@ const Login = () => {
               Uni-Infra-Management
             </Link>
           </Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link>
-              <button
-                onClick={() => handleLinkClick("user")}
-                className={`link ${
-                  activeLink === "user" && "underline"
-                } hover:text-pink-600 transition-all duration-300`}
-              >
-                User
-              </button>
-            </Nav.Link>
-            <Nav.Link>
-              <button
-                onClick={() => handleLinkClick("technician")}
-                className={`link ml-5 ${
-                  activeLink === "technician" && "underline"
-                } hover:text-pink-600 transition-all duration-300`}
-              >
-                Technician
-              </button>
-            </Nav.Link>
-            <button
-              onClick={() => handleLinkClick("account")}
-              className={`link ml-5 ${
-                activeLink === "account" && "underline"
-              } hover:text-pink-600 transition-all duration-300`}
-            >
-              Account Section
-            </button>
-            <button
-              onClick={() => handleLinkClick("faculty")}
-              className={`link ml-5 ${
-                activeLink === "faculty" && "underline"
-              } hover:text-pink-600 transition-all duration-300`}
-            >
-              Faculty
-            </button>
-          </Nav>
+          <Navbar.Toggle
+            aria-controls="responsive-navbar-nav"
+            onClick={() => setExpanded(expanded ? false : "expanded")}
+          />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link>
+                <button
+                  onClick={() => handleLinkClick("user")}
+                  className={`link ${
+                    activeLink === "user" && "underline"
+                  } hover:text-pink-600 transition-all duration-300`}
+                >
+                  User
+                </button>
+              </Nav.Link>
+              <Nav.Link>
+                <button
+                  onClick={() => handleLinkClick("technician")}
+                  className={`link ml-5 ${
+                    activeLink === "technician" && "underline"
+                  } hover:text-pink-600 transition-all duration-300`}
+                >
+                  Technician
+                </button>
+              </Nav.Link>
+              <Nav.Link>
+                <button
+                  onClick={() => handleLinkClick("account")}
+                  className={`link ml-5 ${
+                    activeLink === "account" && "underline"
+                  } hover:text-pink-600 transition-all duration-300`}
+                >
+                  Account Section
+                </button>
+              </Nav.Link>
+              <Nav.Link>
+                <button
+                  onClick={() => handleLinkClick("faculty")}
+                  className={`link ml-5 ${
+                    activeLink === "faculty" && "underline"
+                  } hover:text-pink-600 transition-all duration-300`}
+                >
+                  Faculty
+                </button>
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
 
