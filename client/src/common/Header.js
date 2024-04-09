@@ -53,26 +53,34 @@ export default function Header() {
             className={isOpen ? "show" : ""}
           >
             <Nav className="me-auto">
-              <Nav.Link>
-                <Link className="link" to={"/student"}>
-                  Student
-                </Link>
-              </Nav.Link>
-              <Nav.Link>
-                <Link className="link" to={"/faculty"}>
-                  Faculty
-                </Link>
-              </Nav.Link>
-              <Nav.Link>
-                <Link className="link" to={"/tech"}>
-                  Tech
-                </Link>
-              </Nav.Link>
-              <Nav.Link>
-                <Link className="link" to={"/acc"}>
-                  Account
-                </Link>
-              </Nav.Link>
+              {sessionStorage.getItem("user_type") === "normal" && (
+                <Nav.Link>
+                  <Link className="link" to={"/student"}>
+                    Student
+                  </Link>
+                </Nav.Link>
+              )}
+              {sessionStorage.getItem("user_type") === "admin" && (
+                <Nav.Link>
+                  <Link className="link" to={"/faculty"}>
+                    Faculty
+                  </Link>
+                </Nav.Link>
+              )}
+              {sessionStorage.getItem("user_type") === "technician" && (
+                <Nav.Link>
+                  <Link className="link" to={"/tech"}>
+                    Tech
+                  </Link>
+                </Nav.Link>
+              )}
+              {sessionStorage.getItem("user_type") === "accounts" && (
+                <Nav.Link>
+                  <Link className="link" to={"/acc"}>
+                    Account
+                  </Link>
+                </Nav.Link>
+              )}
               <Nav.Link>
                 <Link className="link" to={"/about"}>
                   AboutUs
