@@ -22,6 +22,7 @@ export default function Account() {
         console.log("fetching");
         const response = await axios.post("http://localhost:4000/api/v1/getAllBillsAccounts",{
             user_type: sessionStorage.getItem("user_type")
+            
         });
         // Set the fetched data to the state
         setBills(response.data.data);

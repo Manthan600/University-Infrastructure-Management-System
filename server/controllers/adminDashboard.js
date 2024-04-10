@@ -963,8 +963,10 @@ exports.adminApproveBill = async (req, res) => {
 exports.getAllBillsAdmin = async (req, res) => {
     try {
         const { user_type } = req.body;
+        console.log("hi");
+        console.log(user_type);
         if (user_type === "admin") {
-            const getNotApprovedBillsQuery = `SELECT * FROM bills WHERE admin_approval = false and acc_sec_approval = false`;
+            const getNotApprovedBillsQuery = `SELECT * FROM bills`;
 
             connection.query(getNotApprovedBillsQuery, (err, results) => {
                 if (err) {
