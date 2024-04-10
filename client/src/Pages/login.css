@@ -137,11 +137,29 @@
 }
 
 .boxxx {
-  margin-top: 50px !important;
+  /* margin-top: 10px !important; */
 }
 
 body {
   /* background-color: rgba(133, 62, 255, 0.721); */
   /* background: linear-gradient(90deg, rgba(138,5,228,1) 48%, rgba(0,108,255,1) 100%, rgba(252,176,69,1) 100%); */
   background: rgb(34, 33, 33);
+}
+
+@media (max-width: 600px) {
+  #myiframe {
+    width: 300px !important;
+    height: 300px !important;
+  }
+}
+
+@media (min-width: 601px) {
+  #myiframe {
+    width: 400px !important;
+    height: 400px !important;
+  }
+}
+
+.input_form{
+  margin-left: 0;
 }
