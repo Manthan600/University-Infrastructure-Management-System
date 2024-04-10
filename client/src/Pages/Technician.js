@@ -11,6 +11,8 @@ export default function Technician() {
   const [resolvedComplaints, setResolvedComplaints] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
 
+  const [totalBill, setTotalBill] = useState(0);
+  const [billDescription, setBillDescription] = useState('');
   useEffect(() => {
     getAllComplaints();
   }, []);
@@ -61,7 +63,7 @@ export default function Technician() {
 
   const handleResolveComplaint = async (token_id) => {
     try {
-      const response = await axios.post('http://localhost:4000/api/v1/resolveComplaints', { tech_id:sessionStorage.getItem('userID'),token_id, tech_type:sessionStorage.getItem('tech_type'), user_type: 'technician' });
+      const response = await axios.post('http://localhost:4000/api/v1/resolveComplaints', { tech_id:sessionStorage.getItem('userID'),token_id, tech_type:sessionStorage.getItem('tech_type'), user_type: 'technician', bill_description:billDescription, total_bill : totalBill });
       // console.log('Complaint resolved:', response.data);
       setShowAlert(true);
       getAllComplaints();
@@ -129,6 +131,9 @@ export default function Technician() {
                 <th>Device ID</th>
                 <th>Description</th>
                 <th>Complaint Date</th>
+                <th>Tech ID</th>
+                <th>Bill Decription</th>
+                <th>Bill Amt</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -141,6 +146,10 @@ export default function Technician() {
                   <td>{complaint.description}</td>
                   <td>{new Date(complaint.complaint_date).toISOString().split('T')[0]}</td>
                   <td>{complaint.tech_id}</td>
+                  <td><input type="text" name="bill_description" placeholder="Bill Description" value={billDescription} onChange={(e) => setBillDescription(e.target.value)}/></td>
+                  <td className="text-center">
+                  <td><input type="number" name="total_bill" value={totalBill} onChange={(e) => setTotalBill(parseFloat(e.target.value))}/></td>
+                  </td>
                   <td className="text-center">
                     <button onClick={() => handleResolveComplaint(complaint.token_id)} className="btn btn-success">Resolve</button>
                   </td>

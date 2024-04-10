@@ -47,24 +47,24 @@ const UserLogin = ({ userType }) => {
       if (user_type === "normal") {
         userID = response.data.data[0].mis;
         sessionStorage.setItem("userID", userID);
-        sessionStorage.setItem("user_type",user_type );
+        sessionStorage.setItem("user_type", user_type);
         navigate("/student");
       } else if (user_type === "admin") {
         userID = response.data.data[0].username;
         sessionStorage.setItem("userID", userID);
-        sessionStorage.setItem("user_type",user_type );
+        sessionStorage.setItem("user_type", user_type);
         navigate("/faculty");
       } else if (user_type === "technician") {
         userID = response.data.data[0].tech_id;
         let tech_type = response.data.data[0].field;
         sessionStorage.setItem("userID", userID);
         sessionStorage.setItem("tech_type", tech_type);
-        sessionStorage.setItem("user_type",user_type );
+        sessionStorage.setItem("user_type", user_type);
         navigate("/tech");
       } else if (user_type === "accounts") {
         userID = response.data.data[0].username;
         sessionStorage.setItem("userID", userID);
-        sessionStorage.setItem("user_type",user_type );
+        sessionStorage.setItem("user_type", user_type);
         navigate("/acc");
       }
     } catch (error) {
@@ -112,19 +112,19 @@ const UserLogin = ({ userType }) => {
         {showLogin && (
           <div
             className="container-fluid h-custom"
-            style={{ marginTop: "7rem", marginLeft: "4rem" }}
+            style={{ marginTop: "4rem" }}
           >
             <div className="row d-flex justify-content-center align-items-center h-100">
-              <div className="col-md-9 col-lg-6 col-xl-5">
+              <div className="col-md-9 col-lg-6 col-xl-5 d-flex justify-content-center">
                 {/* <img
-                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                  className="img-fluid"
-                  alt="Sample image"
-                /> */}
+                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                className="img-fluid"
+                alt="Sample image"
+              /> */}
 
-                <div className="embed-responsive embed-responsive-4by3 text-2xl">
+                <div className="embed-responsive embed-responsive-4by3 d-flex justify-content-center">
                   <iframe
-                  id="myiframe"
+                    id="myiframe"
                     className="embed-responsive-item"
                     src="https://lottie.host/embed/3ce855b8-e242-419d-a029-2e778db903e9/1N4OVze4bW.json"
                     title="Responsive iframe"
@@ -132,8 +132,8 @@ const UserLogin = ({ userType }) => {
                   />
                 </div>
               </div>
-              <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1 ">
-                <h2 className="text-4xl text-center font-bold mt-0 p-0 text-red-500">
+              <div class="input_form" className="col-md-10 col-lg-8 col-xl-6 offset-xl-1">
+                <h2 className="text-3xl text-center font-bold mt-0 p-0 text-red-500">
                   {userType} Login
                 </h2>
                 <form>
@@ -143,7 +143,8 @@ const UserLogin = ({ userType }) => {
                     </label>
                     <input
                       type="text"
-                      className="mt-1 p-2 w-full border rounded-md form-control form-control-lg"
+                      className="mt-1 p-0 w-full border rounded-md form-control form-control-lg"
+                      style={{padding: "0.5rem"}}
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required
@@ -155,7 +156,8 @@ const UserLogin = ({ userType }) => {
                     </label>
                     <input
                       type="password"
-                      className="mt-1 p-2 w-full border rounded-md form-control form-control-lg"
+                      className="mt-1 p-0 w-full border rounded-md form-control form-control-lg"
+                      style={{padding: "0.5rem"}}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required

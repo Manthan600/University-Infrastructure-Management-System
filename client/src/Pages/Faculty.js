@@ -17,6 +17,10 @@ export default function Faculty() {
   const [selectedOption, setSelectedOption] = useState("complaint"); // Initial selected option
   const [selectedDeviceType, setSelectedDeviceType] = useState("computer");
 
+  const [unverifiedBills, setUnverifiedBills] = useState([]);
+  const [notPaidBills, setNotPaidBills] = useState([]);
+  const [paidBills, setPaidBills] = useState([]);
+  
   const [unverifiedComplaints, setUnverifiedComplaints] = useState([]);
   const [notAcceptedComplaints, setnotAcceptedComplaints] = useState([]);
   const [acceptedComplaints, setAcceptedComplaints] = useState([]);
@@ -48,6 +52,9 @@ export default function Faculty() {
   useEffect(() => {
     getAllComplaintsAdmin(selectedDeviceType);
   }, [selectedDeviceType]);
+  useEffect(() => {
+    getAllBillsAdmin();
+  }, []);
 
   // useEffect(() => {
   //   getAllComplaintsAdmin();
@@ -118,6 +125,40 @@ export default function Faculty() {
     }
   };
 
+
+  const getAllBillsAdmin = async () => {
+    try {
+      console.log( sessionStorage.getItem("user_type"));
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/getAllBillsAdmin",
+        {
+        
+            user_type: sessionStorage.getItem("user_type"),
+        }
+      );
+      const { data } = response.data;
+      console.log("hi...");
+      console.log(data);
+      setUnverifiedBills(
+        data.filter((bill) => !bill.admin_approval)
+      );
+      setNotPaidBills(
+        data.filter(
+          (bills) => !bills.acc_sec_approval && bills.admin_approval === 1
+        )
+      );
+      setPaidBills(
+        data.filter(
+          (bill) =>
+            bill.acc_sec_approval===1 &&
+            bill.admin_approval === 1
+        )
+      );
+    } catch (error) {
+      console.error("Error fetching bills:", error);
+    }
+  };
+
   const handleDeviceTypeChange = (deviceType) => {
     setSelectedDeviceType(deviceType);
     console.log(deviceType);
@@ -136,6 +177,26 @@ export default function Faculty() {
       );
       setShowAlert(true);
       getAllComplaintsAdmin(selectedDeviceType);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 4000);
+    } catch (error) {
+      console.error("Error approving complaint:", error);
+    }
+  };
+
+
+  const handleApproveBill = async (bill_id) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/adminApproveBill",
+        {
+          bill_id: bill_id,
+          user_type: sessionStorage.getItem('user_type'),
+        }
+      );
+      setShowAlert(true);
+      getAllBillsAdmin();
       setTimeout(() => {
         setShowAlert(false);
       }, 4000);
@@ -1091,40 +1152,41 @@ export default function Faculty() {
                   <table class="table table-bordered mb-5">
                     <thead>
                       <tr>
+                        <th>Bill ID</th>
+                        <th>Tech ID</th>
                         <th>Token ID</th>
-                        <th>Student ID</th>
+                        <th>Device Type</th>
                         <th>Device ID</th>
                         <th>Description</th>
-                        <th>Complaint Date</th>
-                        <th>Resolved Date</th>
-                        <th>Technician-ID</th>
-                        <th>Chat</th>
+                        <th>Bill Description</th>
+                        <th>Total Bill</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {resolvedComplaints.map((complaint) => (
-                        <tr key={complaint.token_id}>
-                          <td>{complaint.token_id}</td>
-                          <td>{complaint.student_id}</td>
-                          <td>{complaint.device_id}</td>
-                          <td>{complaint.description}</td>
-                          <td>
-                            {
-                              new Date(complaint.complaint_date)
-                                .toISOString()
-                                .split("T")[0]
-                            }
-                          </td>
-                          <td>
-                            {
-                              new Date(complaint.resolved_date)
-                                .toISOString()
-                                .split("T")[0]
-                            }
-                          </td>
-                          <td>{complaint.tech_id}</td>
-                          <td style={{ color: "blue" }}>
-                            <strong>For payment contact Acc Section</strong>
+                      {unverifiedBills.map((bill) => (
+                        <tr key={bill.bill_id}>
+                          <td>{bill.bill_id}</td>
+                          <td>{bill.tech_id}</td>
+                          <td>{bill.token_id}</td>
+                          <td>{bill.device_type}</td>
+                          <td>{bill.device_id}</td>
+                          <td>{bill.description}</td>
+                          <td>{bill.bill_description}</td>
+                          <td>{bill.total_bill}</td>
+                          <td className="text-center">
+                            {/* <button onClick={() => handleApproveComplaint(complaint.token_id)} className="btn btn-success">Accept</button> */}
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleApproveBill(bill.bill_id);
+                              }}
+                              class="btn btn-success"
+                              style={{ marginRight: "10px" }}
+                            >
+                              Verify
+                            </button>
+                           
                           </td>
                         </tr>
                       ))}
@@ -1137,24 +1199,99 @@ export default function Faculty() {
                 <label htmlFor="" className="text-black">
                   Verified but Pending Bills :
                 </label>
+                <div className="table-responsive">
+                  <table class="table table-bordered mb-5">
+                    <thead>
+                      <tr>
+                        <th>Bill ID</th>
+                        <th>Tech ID</th>
+                        <th>Token ID</th>
+                        <th>Device Type</th>
+                        <th>Device ID</th>
+                        <th>Description</th>
+                        <th>Bill Description</th>
+                        <th>Total Bill</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {notPaidBills.map((bill) => (
+                        <tr key={bill.bill_id}>
+                          <td>{bill.bill_id}</td>
+                          <td>{bill.tech_id}</td>
+                          <td>{bill.token_id}</td>
+                          <td>{bill.device_type}</td>
+                          <td>{bill.device_id}</td>
+                          <td>{bill.description}</td>
+                          <td>{bill.bill_description}</td>
+                          <td>{bill.total_bill}</td>
+                          <td style={{color:'blue'}}>In progress...</td>
+                         
+                          {/* <td className="text-center">
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleApproveBill(bill.bill_id);
+                              }}
+                              class="btn btn-success"
+                              style={{ marginRight: "10px" }}
+                            >
+                              Verify
+                            </button>
+                           
+                          </td> */}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
 
                 <br />
                 <label htmlFor="device" className="text-black">
                   Paid Bills :
                 </label>
                 <div className="table-responsive">
-                  <table class="table table-bordered mb-5">
+                    <table class="table table-bordered mb-5">
                     <thead>
                       <tr>
+                        <th>Bill ID</th>
+                        <th>Tech ID</th>
                         <th>Token ID</th>
-                        <th>Student ID</th>
+                        <th>Device Type</th>
                         <th>Device ID</th>
                         <th>Description</th>
-                        <th>Complaint Date</th>
-                        <th>Technician-ID</th>
-                        <th>Paid</th>
+                        <th>Bill Description</th>
+                        <th>Total Bill</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
+                    <tbody>
+                      {paidBills.map((bill) => (
+                        <tr key={bill.bill_id}>
+                          <td>{bill.bill_id}</td>
+                          <td>{bill.tech_id}</td>
+                          <td>{bill.token_id}</td>
+                          <td>{bill.device_type}</td>
+                          <td>{bill.device_id}</td>
+                          <td>{bill.description}</td>
+                          <td>{bill.bill_description}</td>
+                          <td>{bill.total_bill}</td>
+                          <td className="text-center">
+                            {/* <button onClick={() => handleApproveComplaint(complaint.token_id)} className="btn btn-success">Accept</button> */}
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                              }}
+                              class="btn btn-success"
+                              style={{ marginRight: "10px" }}
+                            >
+                              Paid
+                            </button>
+                           
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
                   </table>
                 </div>
 
