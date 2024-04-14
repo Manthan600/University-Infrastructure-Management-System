@@ -117,7 +117,7 @@ exports.getAllComplaints = async (req, res) => {
                     return res.status(500).json({ error: 'Internal server error' });
                 }
 
-                console.log('Retrieved complaints:', results); // Add logging here to see the results
+                // console.log('Retrieved complaints:', results); // Add logging here to see the results
 
                 return res.status(200).json({
                     data: results
@@ -274,6 +274,44 @@ exports.acceptComplaints = async (req, res) => {
     }
 }
 
+exports.getAllBillsStatus = async (req, res) => {
+    try {
+        console.log("in tech bills");
+        const { user_type,tech_id } = req.body;
+        console.log(tech_id);
+        if (1==1) {
+            const getBillsQuery = `SELECT * FROM bills WHERE tech_id=?`;
+
+            connection.query(getBillsQuery ,[tech_id],(err, results) => {
+                if (err) {
+                    console.error('Error fetching bills status: ' + err.stack);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+                // console.log("Results:" ,results)
+
+                return res.status(200).json({
+                    data: results
+                });
+            });
+        }
+        else {
+            res.status(401).json({
+                success: false,
+                data: 'Unauthorized access',
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            data: 'Internal server error',
+            message: err.message
+        });
+    }
+};
+
+ 
+
 exports.resolveComplaints = async (req, res) => {
     try {
 
@@ -328,7 +366,12 @@ exports.resolveComplaints = async (req, res) => {
 
                 // Insert details into the bills table
                 const insertBillQuery = `INSERT INTO bills (tech_id, token_id, device_type, description, total_bill, device_id) VALUES (?, ?, ?, ?, ?, ?)`;
-                connection.query(insertBillQuery, [tech_id, token_id, tech_type, bill_description, total_bill, device_id], async (err, insertResults) => {
+                
+                console.log("hello : " ,  [tech_id, token_id, tech_type, bill_description, total_bill, device_id]);
+
+
+                connection.query(insertBillQuery, [tech_id, token_id, tech_type, bill_description, total_bill, device_id], async (err, result) => {
+
                     if (err) {
                         console.error('Error inserting bill details: ' + err.stack);
                         return res.status(500).json({ error: 'Internal server error' });
@@ -348,16 +391,6 @@ exports.resolveComplaints = async (req, res) => {
                         console.error('Error sending email to admin but complaint resolved by technician: ' + emailError.stack);
                         return res.status(500).json({ error: 'Internal server error2' });
                     }
-
-                    // Delete resolved complaint from DEVICE_COMPLAINTS table
-                    // const resolveComplaintQuery = `DELETE FROM ${DEVICE_COMPLAINTS} WHERE token_id = ?`;
-                    // connection.query(resolveComplaintQuery, [token_id], async (err, deleteResults) => {
-                    //     if (err) {
-                    //         console.error('Error resolving complaints: ' + err.stack);
-                    //         return res.status(500).json({ error: 'Internal server error' });
-                    //     }
-
-                    //     // Send email to admin regarding resolved complaint
                         
                     // });
                 });
