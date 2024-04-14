@@ -5,12 +5,21 @@ const sendMail = async (req, res, sender, to, subject, message) => {
 
   // connect with the smtp
   let transporter = await nodemailer.createTransport({
-    host: "smtp.ethereal.email",
+    // host: "smtp.ethereal.email",
+    // port: 587,
+    // auth: {
+    //   // user: 'ellie.greenfelder@ethereal.email',
+    //   user: 'ellie.greenfelder@ethereal.email',
+    //   pass: '9XWw7se4hj23Da3gUX'
+   
+
+    host: "smtp.gmail.com",
     port: 587,
     auth: {
-      user: 'ellie.greenfelder@ethereal.email',
-      pass: '9XWw7se4hj23Da3gUX'
-  }
+      // user: 'ellie.greenfelder@ethereal.email',
+      user: 'manthans.kshetrapal@gmail.com',
+      pass: 'kqpcbomemnudfeed'
+    }
   });
 
   let info = await transporter.sendMail({

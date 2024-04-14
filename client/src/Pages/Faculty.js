@@ -1157,7 +1157,6 @@ export default function Faculty() {
                         <th>Token ID</th>
                         <th>Device Type</th>
                         <th>Device ID</th>
-                        <th>Description</th>
                         <th>Bill Description</th>
                         <th>Total Bill</th>
                         <th>Action</th>
@@ -1172,7 +1171,6 @@ export default function Faculty() {
                           <td>{bill.device_type}</td>
                           <td>{bill.device_id}</td>
                           <td>{bill.description}</td>
-                          <td>{bill.bill_description}</td>
                           <td>{bill.total_bill}</td>
                           <td className="text-center">
                             {/* <button onClick={() => handleApproveComplaint(complaint.token_id)} className="btn btn-success">Accept</button> */}
@@ -1208,7 +1206,6 @@ export default function Faculty() {
                         <th>Token ID</th>
                         <th>Device Type</th>
                         <th>Device ID</th>
-                        <th>Description</th>
                         <th>Bill Description</th>
                         <th>Total Bill</th>
                         <th>Action</th>
@@ -1223,7 +1220,6 @@ export default function Faculty() {
                           <td>{bill.device_type}</td>
                           <td>{bill.device_id}</td>
                           <td>{bill.description}</td>
-                          <td>{bill.bill_description}</td>
                           <td>{bill.total_bill}</td>
                           <td style={{color:'blue'}}>In progress...</td>
                          
@@ -1259,7 +1255,6 @@ export default function Faculty() {
                         <th>Token ID</th>
                         <th>Device Type</th>
                         <th>Device ID</th>
-                        <th>Description</th>
                         <th>Bill Description</th>
                         <th>Total Bill</th>
                         <th>Action</th>
@@ -1274,7 +1269,6 @@ export default function Faculty() {
                           <td>{bill.device_type}</td>
                           <td>{bill.device_id}</td>
                           <td>{bill.description}</td>
-                          <td>{bill.bill_description}</td>
                           <td>{bill.total_bill}</td>
                           <td className="text-center">
                             {/* <button onClick={() => handleApproveComplaint(complaint.token_id)} className="btn btn-success">Accept</button> */}
