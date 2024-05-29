@@ -1257,7 +1257,7 @@ export default function Faculty() {
                         <th>Device ID</th>
                         <th>Bill Description</th>
                         <th>Total Bill</th>
-                        <th>Action</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1279,7 +1279,7 @@ export default function Faculty() {
                               class="btn btn-success"
                               style={{ marginRight: "10px" }}
                             >
-                              Paid
+                              Approved
                             </button>
                            
                           </td>

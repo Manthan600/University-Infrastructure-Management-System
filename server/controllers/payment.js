@@ -1,7 +1,6 @@
 let connection;
 
 exports.setup = (database) => {
-    console.log(connection, " connection reaches login page");
     connection = database;
 }
 const axios = require('axios');

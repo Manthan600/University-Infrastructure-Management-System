@@ -1,7 +1,6 @@
 let connection;
 
 exports.setup = (database) => {
-    console.log(connection, " connection reaches register complaints page");
     connection = database;
 }
 

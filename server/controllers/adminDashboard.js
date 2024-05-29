@@ -3,7 +3,6 @@ const generateQRCode = require("../config/qrCode");
 let connection;
 
 exports.setup = (database) => {
-    console.log(connection, " connection reaches admin page");
     connection = database;
 }
 
